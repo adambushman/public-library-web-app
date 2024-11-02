@@ -1,32 +1,7 @@
-<html>
-	<head>
-	
-		<title>Employee List</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel="stylesheet" href="styles.css" > 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+<?php include_once '../partials/head.php'; ?>
 
-	</head>
-	<body>
-
-	<!-- Navbar -->
-	<nav class="navbar navbar-default">
-	  <div class="container">
-		<div class="navbar-header">
-		   <a class="navbar-brand" href="#myPage"><span class="glyphicon glyphicon-book"></span></a>
-		</div>
-		<div class="collapse navbar-collapse" id="myNavbar">
-		  <ul class="nav navbar-nav navbar-right">
-		  	<li><a href="Library-staff-only.html">Staff Access</a></li>
-		  	<li><a href="Update-account.html">Update Account</a></li>			
-			<li><a href="">Initiate Return</a></li>
-			<li><a href="Library-login.html">Logout</a></li>
-			<li><a href="Library-search.html">Search Library</a></li>
-		  </ul>
-		</div>
-	  </div>
-	</nav>
+<!-- Navbar -->
+<?php include_once '../partials/navbar.php'; ?>
 
 <!-- TABLE -->
 
@@ -36,7 +11,7 @@
             <h1 class="text-center">Employee List</h1>
         </div>
         <div class="col-md-4 text-right">
-			<a href="add-employee.html" class="btn btn-primary">Add Employee</a>
+			<a href="add-employee.php" class="btn btn-primary">Add Employee</a>
 			
         </div>
     </div>
@@ -62,8 +37,8 @@
                     <td>gsturgis@example.com</td>
                     <td>801-123-4567</td>
                     <td>
-                        <a href="delete_employee.php" class="btn btn-danger">Delete</a>
-						<a href="update-employee.html" class="btn btn-primary btn-sm">Update</a>
+                        <a href="delete-employee.php" class="btn btn-danger">Delete</a>
+						<a href="update-employee.php" class="btn btn-primary btn-sm">Update</a>
 
                     </td>
                 </tr>
@@ -76,7 +51,7 @@
                     <td>801-123-4567</td>
                     <td>
                         <a href="delete_employee.php" class="btn btn-danger">Delete</a>
-						<a href="update-employee.html" class="btn btn-primary btn-sm">Update</a> 
+						<a href="update-employee.php" class="btn btn-primary btn-sm">Update</a> 
 
                     </td>
                 </tr>
@@ -89,7 +64,7 @@
                     <td>801-123-4567</td>
                     <td>
                         <a href="delete_employee.php" class="btn btn-danger">Delete</a>
-						<a href="update-employee.html" class="btn btn-primary btn-sm">Update</a>
+						<a href="update-employee.php" class="btn btn-primary btn-sm">Update</a>
 
                     </td>
                 </tr>
@@ -141,5 +116,4 @@
 		</div>
 		</div>
  
-	</body>
-</html>
+<?php include_once '../partials/footer.php'; ?>

@@ -1,33 +1,8 @@
-<html>
-	<head>
-		
-		<title>Add Employee</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel="stylesheet" href="styles.css" > 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
-	
-	</head>
-	<body>
-	
-	<!-- Navbar -->
-	<nav class="navbar navbar-default">
-	  <div class="container">
-		<div class="navbar-header">
-		   <a class="navbar-brand" href="#myPage"><span class="glyphicon glyphicon-book"></span></a>
-		</div>
-		<div class="collapse navbar-collapse" id="myNavbar">
-		  <ul class="nav navbar-nav navbar-right">
-		  	<li><a href="Library-staff-only.html">Staff Access</a></li>
-		  	<li><a href="Update-account.html">Update Account</a></li>			
-			<li><a href="">Initiate Return</a></li>
-			<li><a href="Library-login.html">Logout</a></li>
-			<li><a href="Library-search.html">Search Library</a></li>
-		  </ul>
-		</div>
-	  </div>
-	</nav>
-	
+<?php include_once '../partials/head.php'; ?>
+
+<!-- Navbar -->
+<?php include_once '../partials/navbar.php'; ?>
+
 	
 	<!-- FORM -->
 		<div class="container">
@@ -71,7 +46,7 @@
 	
 	
 						<div class="d-flex justify-content-end">
-							<a href="delete_employee.php" class="btn btn-danger">Delete</a>
+							<a href="delete-employee.php" class="btn btn-danger">Delete</a>
 							<a href="view-employees.html" class="btn btn-primary ms-2">Add</a>
 							
 							
@@ -121,5 +96,4 @@
 		</div>
 		</div>
 		
-	</body>
-</html>
+<?php include_once '../partials/footer.php'; ?>
