@@ -1,52 +1,27 @@
-<html>
-	<head>
-	
-		<title>Library Home Page</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel="stylesheet" href="styles.css" > 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+<?php include_once '../partials/head.php'; ?>
 
-	</head>
-	
-	<body id="login">
-	
-	<!-- Navbar -->
-	<nav class="navbar navbar-default">
-	  <div class="container">
-		<div class="navbar-header">
-		   <a class="navbar-brand" href="#myPage"><span class="glyphicon glyphicon-book"></span></a>
-		</div>
-		<div class="collapse navbar-collapse" id="myNavbar">
-		  <ul class="nav navbar-nav navbar-right">
-		  	<li><a href="Library-staff-only.html">Staff Access</a></li>
-		  	<li><a href="Update-account.html">Update Account</a></li>			
-			<li><a href="">Initiate Return</a></li>
-			<li><a href="Library-login.html">Logout</a></li>
-			<li><a href="Library-search.html">Search Library</a></li>
-		  </ul>
-		</div>
-	  </div>
-	</nav>
-						<img src="ImageDirectory/booklogo.jpg" style="float: left;" width="300" height="195" />
+<!-- Navbar -->
+<?php include_once '../partials/navbar.php'; ?>
+
+						<img src="../../ImageDirectory/booklogo.jpg" style="float: left;" width="300" height="195" />
 	<!-- Header -->
 	<div class="jumbotron text-center">
 		<h1>Library Home Page</h1>
 	</div>
 		
 	<div class="container-fluid", class="col-lg-12" style="float: right;">	
-	<img src="ImageDirectory/kidbook.jpg" syle="float: center-right" />
+	<img src="../../ImageDirectory/kidbook.jpg" syle="float: center-right" />
 	</div>
 	
 	<!-- Search for Classes -->
 	<div id="Search" class="container-fluid">
 		<div class="row">
 			<div class="col-sm-4">
-			<h1><a href="Library-classes.html">Search for Classes</a></h1>
+			<h1><a href="404.php">Search for Classes</a></h1>
 				<h4> We offer many classes from pottery to reading hour for children!</h4><br>
-			<h1><a href="Track-fines.html">Track Items</a></h1>
+			<h1><a href="404.php">Track Items</a></h1>
 				<h4> Check here to see if your favorite book is available!</h4><br>
-			<h1><a href="Track-fines.html">Track Fines</a></h1>
+			<h1><a href="404.php">Track Fines</a></h1>
 				<h4> Check here to see if you need to pay fines before checking out your next book!</h4><br>	
 			</div>
 		</div>
@@ -100,3 +75,4 @@
   </div>
 </div>
 
+<?php include_once '../partials/footer.php'; ?>
