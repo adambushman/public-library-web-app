@@ -92,5 +92,5 @@
   </div>
 </section>
 
-
+<!-- Footer -->
 <?php include_once '../partials/footer.php'; ?>
