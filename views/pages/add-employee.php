@@ -1,99 +1,51 @@
+<!-- Header -->
 <?php include_once '../partials/head.php'; ?>
 
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
-	
-	<!-- FORM -->
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-md-6">
-					<form>   
-	
-						<h2>Add Employee</h2>
-	
-						<div class="mb-3">
-							<label for="deptCode">Department Code:</label>
-							<input type="text" class="form-control" id="deptCode" name="deptCode" required>
-						</div>
-						<br>
-	
-						<div class="mb-3">
-							<label for="firstName">First Name:</label>
-							<input type="text" class="form-control" id="firstName" name="firstName" required>
-						</div>
-						<br>
-	
-						<div class="mb-3">   
-	
-							<label for="lastName">Last Name:</label>
-							<input type="text" class="form-control" id="lastName" name="lastName" required>
-						</div>
-						<br>
-	
-						<div class="mb-3">   
-	
-							<label for="email">Email:</label>
-							<input type="email" class="form-control" id="email" name="email" required>
-						</div>
-						<br>
-	
-						<div class="mb-3">
-							<label for="phone">Phone Number:</label>
-							<input type="tel" class="form-control" id="phone" name="phone" required>
-						</div>
-						<br>  
-	
-	
-						<div class="d-flex justify-content-end">
-							<a href="delete-employee.php" class="btn btn-danger">Delete</a>
-							<a href="view-employees.html" class="btn btn-primary ms-2">Add</a>
-							
-							
-						</div>
-					</form>
+<!-- FORM -->
+<div class="container mt-5">
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<h2 class="mb-3">Update Employee</h2>
+
+			<form>
+				<div class="mb-3">
+					<label for="deptCode">Department Code:</label>
+					<input type="text" class="form-control" id="deptCode" name="deptCode" required>
 				</div>
-			</div>
+
+				<div class="mb-3">
+					<label for="firstName">First Name:</label>
+					<input type="text" class="form-control" id="firstName" name="firstName" required>
+				</div>
+
+				<div class="mb-3">
+					<label for="lastName">Last Name:</label>
+					<input type="text" class="form-control" id="lastName" name="lastName" required>
+				</div>
+
+				<div class="mb-3"> 
+
+					<label for="email">Email:</label>
+					<input type="email" class="form-control" id="email" name="email" required>
+				</div>
+
+				<div class="mb-5">
+					<label for="phone">Phone Number:</label>
+					<input type="tel" class="form-control" id="phone" name="phone" required>
+				</div>
+
+
+				<div class="d-flex justify-content-end">
+					<a href="view-employees.php" class="btn btn-secondary">Cancel</a>
+					<a href="view-employees.html" class="btn btn-primary ms-2">Add</a>
+				</div>
+			</form>
 		</div>
-	
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>   
-	
-	<div id="myCarousel" class="carousel slide text-center" data-ride="carousel">
-			<!-- Indicators -->
-			<h2>What is happening at our Library?</h2>
-			<br>
-			<br>
-			<ol class="carousel-indicators">
-			<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-			<li data-target="#myCarousel" data-slide-to="1"></li>
-			<li data-target="#myCarousel" data-slide-to="2"></li>
-				<br>
-			<br>
-			</ol>
-		
-			<!-- Wrapper for slides -->
-			<div class="carousel-inner" role="listbox">
-			<div class="item active">
-				<h4>Join us for story hour Wednesday and Thursdays from 10am-11am<br></h4>
-			</div>
-			<div class="item">
-				<h4>Upcoming book fair with 10% off and BOGO!</span></h4>
-			</div>
-			<div class="item">
-				<h4>Paint with Ms. Rachel for Mom and Kids!</span></h4>
-			</div>
-			</div>
-		
-			<!-- Left and right controls -->
-			<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-			<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-			<span class="sr-only">Previous</span>
-			</a>
-			<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-			<span class="sr-only">Next</span>
-			</a>
-		</div>
-		</div>
-		
+	</div>
+</div>
+
+<!-- Footer -->
 <?php include_once '../partials/footer.php'; ?>
