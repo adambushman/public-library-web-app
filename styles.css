@@ -1,6 +1,26 @@
-#myCarousel {
+#carouselWrapper {
+    height: 20rem;
+    overflow: hidden;
+}
+
+#carouselWrapper img {
+    filter: brightness(75%);
+}
+
+#homeHero {
+    height: 30rem;
+    background-image: url('ImageDirectory/main-hero.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.text-img-overlay {
+    text-shadow: 2px 2px 10px black;
+}
+
+.carousel-text {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    top: 10rem;
+    left: 50%;
+    transform: translate(-50%,-50%);
 }
