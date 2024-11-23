@@ -121,7 +121,6 @@ CREATE TABLE LIB_PUBLISHER_TYPE (
 CREATE TABLE LIB_PUBLISHER (
     PublisherID TINYINT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(100) NOT NULL,
-    LogoPath VARCHAR(255),
     PublisherTypeID TINYINT, 
     FOREIGN KEY (PublisherTypeID) REFERENCES LIB_PUBLISHER_TYPE(PublisherTypeID)
 );
@@ -138,18 +137,21 @@ CREATE TABLE LIB_CREATOR (
     DateBorn DATE,
     DateDied DATE,
     Bio TEXT,
-    PhotoPath VARCHAR(255),
+    ImagePath VARCHAR(255),
     CreatorTypeID TINYINT,
     FOREIGN KEY (CreatorTypeID) REFERENCES LIB_CREATOR_TYPE(CreatorTypeID)
 );
 
 CREATE TABLE LIB_ITEM (
     ItemID INT AUTO_INCREMENT PRIMARY KEY,
+    Isbn VARCHAR(13) NOT NULL, 
     Title VARCHAR(255) NOT NULL,
     Description TEXT,
     Year SMALLINT,
     IssueNumber TINYINT,
-    Copies TINYINT,
+    LibCopies TINYINT,
+    ImagePath VARCHAR(255), 
+    LibLocation VARCHAR(50), 
     ItemTypeID TINYINT,
     MediaTypeID TINYINT,
     GenreID TINYINT,

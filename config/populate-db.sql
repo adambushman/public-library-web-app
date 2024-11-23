@@ -38,7 +38,8 @@ INSERT INTO LIB_GENRE (Name) VALUES
 ('Young Adult'),
 ('Music'),
 ('Poetry'),
-('Crime');
+('Crime'),
+('Classic');
 
 INSERT INTO LIB_CREATOR_TYPE (Name) VALUES
 ('Author'),
@@ -48,7 +49,8 @@ INSERT INTO LIB_CREATOR_TYPE (Name) VALUES
 ('Musician'),
 ('Composer'),
 ('Artist'),
-('Photographer');
+('Photographer')
+('Editor');
 
 INSERT INTO LIB_PUBLISHER_TYPE (Name) VALUES
 ('Publisher'),
@@ -76,42 +78,50 @@ INSERT INTO LIB_ROOM (Name, Capacity) VALUES
 ('Kalahari', 60),
 ('Pacific', 60);
 
-INSERT INTO LIB_CREATOR (Name, Gender, DateBorn, DateDied, Bio, CreatorTypeID) VALUES
-('Mark Twain', 'M', '1835-11-30', '1910-04-21', 'Famous for works like Adventures of Huckleberry Finn and The Adventures of Tom Sawyer.', 1),
-('J.K. Rowling', 'F', '1965-07-31', NULL, 'Best known for writing the Harry Potter series.', 1),
-('George Orwell', 'M', '1903-06-25', '1950-01-21', 'Famous for works such as 1984 and Animal Farm.', 1),
-('Maya Angelou', 'F', '1928-04-04', '2014-05-28', 'Known for her autobiographies and poetry, including I Know Why the Caged Bird Sings.', 1),
-('William Shakespeare', 'M', '1564-04-23', '1616-04-23', 'The iconic playwright, known for works like Romeo and Juliet, Macbeth, and Hamlet.', 1);
+INSERT INTO LIB_CREATOR (Name, Gender, DateBorn, DateDied, Bio, ImagePath, CreatorTypeID) VALUES
+('Mark Twain', 'M', '1835-11-30', '1910-04-21', 'Famous for works like Adventures of Huckleberry Finn and The Adventures of Tom Sawyer.', 'ImageDirectory/creator-img-1.webp', 1),
+('J.K. Rowling', 'F', '1965-07-31', NULL, 'Best known for writing the Harry Potter series.', 'ImageDirectory/creator-img-2.png', 1),
+('George Orwell', 'M', '1903-06-25', '1950-01-21', 'Famous for works such as 1984 and Animal Farm.', 'ImageDirectory/creator-img-3.jpg', 1),
+('Maya Angelou', 'F', '1928-04-04', '2014-05-28', 'Known for her autobiographies and poetry, including I Know Why the Caged Bird Sings.', 'ImageDirectory/creator-img-4.jpg', 1),
+('William Shakespeare', 'M', '1564-04-23', '1616-04-23', 'The iconic playwright, known for works like Romeo and Juliet, Macbeth, and Hamlet.', 'ImageDirectory/creator-img-5.jpg', 1), 
+('Harper Lee', 'F', '1926-04-28', '2016-02-19', 'An American novelist whose 1960 novel To Kill a Mockingbird won the 1961 Pulitzer Prize and became a classic of modern American literature.', 'ImageDirectory/creator-img-6.webp', 1),
+('Barbara A. Mowat', 'F', '1934-01-29', '2017-11-24', ' Director of Research emerita at the Folger Shakespeare Library, Consulting Editor of Shakespeare Quarterly, and author of The Dramaturgy of Shakespeare\'s Romances and of essays on Shakespeare\'s plays and their editing.', 'ImageDirectory/creator-img-7.webp', 1),
+('Paul Werstine', 'M', NULL, NULL, 'Professor Werstine has spent his career teaching Shakespeare and Medieval and Renaissance English Literature at King\'s University College.', 'ImageDirectory/creator-img-8.jpg', 1);
 
-INSERT INTO LIB_PUBLISHER (Name, LogoPath, PublisherTypeID) VALUES
-('Charles L. Webster & Co.', NULL, 1),
-('Bloomsbury Publishing', NULL, 1),
-('Secker & Warburg', NULL, 1),
-('Random House', NULL, 1),
-('Oxford University Press', NULL, 1);
+INSERT INTO LIB_PUBLISHER (Name, PublisherTypeID) VALUES
+('Charles L. Webster & Co.', 1),
+('Bloomsbury Publishing', 1),
+('Secker & Warburg', 1),
+('Random House', 1),
+('Ballantine Books', 1), 
+('Folger Shakespeare Library', 1);
 
 
-INSERT INTO LIB_ITEM (Title, Description, Year, IssueNumber, Copies, ItemTypeID, MediaTypeID, GenreID) VALUES
-('Adventures of Huckleberry Finn', 'A novel by Mark Twain that chronicles the adventures of a young boy and an escaped slave.', 1884, 1, 2, 1, 1, 1),
-('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling\'s fantasy novel about a young wizard attending Hogwarts School of Witchcraft and Wizardry.', 1997, 1, 1, 1, 1, 4),
-('Harry Potter and the Chamber of Secrets', 'J.K. Rowling\'s second book in the Harry Potter series, where Harry faces new challenges at Hogwarts.', 1998, 2, 2, 1, 1, 4),
-('Harry Potter and the Prisoner of Azkaban', 'The third novel in the Harry Potter series, where Harry learns more about his family\'s dark secrets.', 1999, 3, 2, 1, 1, 4),
-('To Kill a Mockingbird', 'Harper Lee\'s Pulitzer Prize-winning novel that explores racial injustice in the American South.', 1960, 1, 3, 1, 1, 1),
-('1984', 'George Orwell\'s dystopian novel about a totalitarian regime that uses surveillance and mind control to oppress the masses.', 1949, 1, 1, 1, 1, 1),
-('The Taming of the Shrew', 'A comedy by William Shakespeare about a man who tries to tame his strong-willed wife.', 1590, 1, 1, 1, 1, 3),
-('Macbeth', 'A tragedy by William Shakespeare about the destructive effects of ambition on Macbeth and Lady Macbeth.', 1606, 1, 1, 1, 1, 3),
-('I Know Why the Caged Bird Sings', 'Maya Angelou\'s autobiography that reflects her early life and the challenges she faced growing up.', 1969, 1, 1, 1, 1, 2),
-('Gather Together in My Name', 'Maya Angelou\'s second autobiography about the complexities of womanhood, motherhood, and self-discovery.', 1974, 1, 1, 1, 1, 2);
+INSERT INTO LIB_ITEM (Isbn, Title, Description, Year, IssueNumber, LibCopies, ImagePath, LibLocation, ItemTypeID, MediaTypeID, GenreID) VALUES
+('9783161484100','Adventures of Huckleberry Finn', 'A novel by Mark Twain that chronicles the adventures of a young boy and an escaped slave.', 1884, 1, 2, 'ImageDirectory/item-img-1.webp', 'FIC TWA 813.4', 1, 1, 21),
+('9780590353403','Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling\'s fantasy novel about a young wizard attending Hogwarts School of Witchcraft and Wizardry.', 1997, 1, 1, 'ImageDirectory/item-img-2.jpg', 'FIC ROW 823.914', 1, 1, 4),
+('9780590471151','Harry Potter and the Chamber of Secrets', 'J.K. Rowling\'s second book in the Harry Potter series, where Harry faces new challenges at Hogwarts.', 1998, 2, 2, 'ImageDirectory/item-img-3.jpg', 'FIC ROW 823.914', 1, 1, 4),
+('9780590471168','Harry Potter and the Prisoner of Azkaban', 'The third novel in the Harry Potter series, where Harry learns more about his family\'s dark secrets.', 1999, 3, 2, 'ImageDirectory/item-img-4.jpg', 'FIC LEE 813.54', 1, 1, 4),
+('9780061120084','To Kill a Mockingbird', 'Harper Lee\'s Pulitzer Prize-winning novel that explores racial injustice in the American South.', 1960, 1, 3, 'ImageDirectory/item-img-5.jpg', 'FIC ORW 823.912', 1, 1, 21),
+('9780452284234','1984', 'George Orwell\'s dystopian novel about a totalitarian regime that uses surveillance and mind control to oppress the masses.', 1949, 1, 1, 'ImageDirectory/item-img-6.jpg', 'FIC TWA 813.4', 1, 1, 1),
+('9781853263364','The Taming of the Shrew', 'A comedy by William Shakespeare about a man who tries to tame his strong-willed wife.', 1590, 1, 1, 'ImageDirectory/item-img-7.jpg', '822.33 SHA', 1, 1, 21),
+('9781853263326','Macbeth', 'A tragedy by William Shakespeare about the destructive effects of ambition on Macbeth and Lady Macbeth.', 1606, 1, 1, 'ImageDirectory/item-img-8.jpg', '822.33 SHA', 1, 1, 21),
+('9780345530016','I Know Why the Caged Bird Sings', 'Maya Angelou\'s autobiography that reflects her early life and the challenges she faced growing up.', 1969, 1, 1, 'ImageDirectory/item-img-9.jpg', '921 ANG', 1, 1, 6),
+('9780345530023','Gather Together in My Name', 'Maya Angelou\'s second autobiography about the complexities of womanhood, motherhood, and self-discovery.', 1974, 1, 1, 'ImageDirectory/item-img-10.jpg', '921 ANG', 1, 1, 6);
 
 INSERT INTO LIB_ITEM_CREATOR (ItemID, CreatorID) VALUES
 (1, 1), -- "Adventures of Huckleberry Finn" by Mark Twain
 (2, 2), -- "Harry Potter and the Sorcerer's Stone" by J.K. Rowling
 (3, 2), -- "Harry Potter and the Chamber of Secrets" by J.K. Rowling
 (4, 2), -- "Harry Potter and the Prisoner of Azkaban" by J.K. Rowling
-(5, 3), -- "To Kill a Mockingbird" by Harper Lee (Not in creators list, assuming this is a mistake and will be excluded)
+(5, 6), -- "To Kill a Mockingbird" by Harper Lee
 (6, 3), -- "1984" by George Orwell
 (7, 5), -- "The Taming of the Shrew" by William Shakespeare
+(7, 7), -- "The Taming of the Shrew" edited by Barbara A. Mowat
+(7, 8), -- "The Taming of the Shrew" edited by Paul Werstine
 (8, 5), -- "Macbeth" by William Shakespeare
+(8, 7), -- "Macbeth" edited by Barbara A. Mowat
+(8, 8), -- "Macbeth" edited by Paul Werstine
 (9, 4), -- "I Know Why the Caged Bird Sings" by Maya Angelou
 (10, 4); -- "Gather Together in My Name" by Maya Angelou
 
@@ -122,10 +132,10 @@ INSERT INTO LIB_ITEM_PUBLISHER (ItemID, PublisherID) VALUES
 (4, 2), -- "Harry Potter and the Prisoner of Azkaban" by Bloomsbury Publishing
 (5, 4), -- "To Kill a Mockingbird" by Random House
 (6, 3), -- "1984" by Secker & Warburg
-(7, 3), -- "The Taming of the Shrew" by Secker & Warburg (Not applicable for Publisher in our case)
-(8, 3), -- "Macbeth" by Secker & Warburg (Same as above)
-(9, 5), -- "I Know Why the Caged Bird Sings" by Oxford University Press
-(10, 5); -- "Gather Together in My Name" by Oxford University Press
+(7, 6), -- "The Taming of the Shrew" by Folger Shapespeare Library
+(8, 6), -- "Macbeth" by Folger Shapespeare Library
+(9, 5), -- "I Know Why the Caged Bird Sings" by Ballantine Books
+(10, 4); -- "Gather Together in My Name" by Random House
 
 INSERT INTO LIB_INSTRUCTOR (Name, Gender, Bio, ImagePath) VALUES
 ('Dr. John Doe', 'M', 'Dr. John Doe is an experienced educator with a passion for literature and history. He has been teaching for over 20 years and specializes in American and English literature.', NULL),
