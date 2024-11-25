@@ -85,7 +85,7 @@ INSERT INTO LIB_CREATOR (Name, Gender, DateBorn, DateDied, Bio, ImagePath, Creat
 ('Maya Angelou', 'F', '1928-04-04', '2014-05-28', 'Known for her autobiographies and poetry, including I Know Why the Caged Bird Sings.', 'ImageDirectory/creator-img-4.jpg', 1),
 ('William Shakespeare', 'M', '1564-04-23', '1616-04-23', 'The iconic playwright, known for works like Romeo and Juliet, Macbeth, and Hamlet.', 'ImageDirectory/creator-img-5.jpg', 1), 
 ('Harper Lee', 'F', '1926-04-28', '2016-02-19', 'An American novelist whose 1960 novel To Kill a Mockingbird won the 1961 Pulitzer Prize and became a classic of modern American literature.', 'ImageDirectory/creator-img-6.webp', 1),
-('Barbara A. Mowat', 'F', '1934-01-29', '2017-11-24', ' Director of Research emerita at the Folger Shakespeare Library, Consulting Editor of Shakespeare Quarterly, and author of The Dramaturgy of Shakespeare\'s Romances and of essays on Shakespeare\'s plays and their editing.', 'ImageDirectory/creator-img-7.webp', 1),
+('Barbara A. Mowat', 'F', '1934-01-29', '2017-11-24', ' Director of Research emerita at the Folger Shakespeare Library, Consulting Editor of Shakespeare Quarterly, and author of The Dramaturgy of Shakespeare\'s Romances and of essays on Shakespeare\'s plays and their editing.', 'ImageDirectory/creator-img-7.jpg', 1),
 ('Paul Werstine', 'M', NULL, NULL, 'Professor Werstine has spent his career teaching Shakespeare and Medieval and Renaissance English Literature at King\'s University College.', 'ImageDirectory/creator-img-8.jpg', 1);
 
 INSERT INTO LIB_PUBLISHER (Name, PublisherTypeID) VALUES

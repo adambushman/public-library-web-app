@@ -1,5 +1,9 @@
 <?php
 echo <<<_END
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
     <footer class="mt-auto text-bg-light">
         <div class="container my-3">
             <div class="row justify-content-center">
