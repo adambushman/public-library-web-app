@@ -1,8 +1,5 @@
 <?php
 
-require_once 'dbConnectMsg.php';
-$message = testConnect();
-
 echo <<<_END
 
 <header>
@@ -12,12 +9,11 @@ echo <<<_END
 				<h1><i class="bi bi-book-fill"></i></h1>
 				<h3 class="ps-3">Public Library</h3>
 			</a>
-			<div>$message</div>
 			<div>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li class="nav-item">
-							<a class="nav-link" href="404.php">Catalog</a>
+							<a class="nav-link" href="view-catalog.php">Catalog</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="404.php">Classes</a>

@@ -24,3 +24,19 @@
     left: 50%;
     transform: translate(-50%,-50%);
 }
+
+.catalog-item-img {
+    margin-top: 1rem;
+    height: 15rem;
+    object-fit: contain;
+    width: 100%;
+}
+
+.text-truncate-multiline {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 6; /* Number of lines before truncation */
+    height: calc(1.5em * 6); /* Adjust based on line height and number of lines */
+}
