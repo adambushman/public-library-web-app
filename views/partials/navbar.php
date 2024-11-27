@@ -28,7 +28,7 @@ echo <<<_END
 							<a class="nav-link" href="404.php">Account</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="login.php">Logout</a>
+							<a class="nav-link" href="logout.php">Logout</a>
 						</li>
 					</ul>
 				</div>

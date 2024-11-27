@@ -13,7 +13,7 @@
 						<img class="card-img-top" src="../../ImageDirectory/library1.jpeg" alt="">      
                         <div class="card-body">
 							<h2>Login to Your Account</h2>
-                            <form action="" class="w-md-75 justify-content-center">
+                            <form action="login.php" method="POST" class="w-md-75 justify-content-center">
                                 <div class="my-3">
                                     <label for="emailInput" class="form-label">Email address</label>
                                     <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@example.com">
@@ -23,7 +23,7 @@
                                     <input type="password" class="form-control" id="passwordInput" name="password" placeholder="************">
                                 </div>
                                 <div class="d-grid">
-                                    <a href="home.php" class="btn btn-dark my-3">Login</a>
+                                    <button type="submit" href="home.php" class="btn btn-dark my-3">Login</button>
                                 </div>
                                 <hr>
                                 <div class="d-flex justify-content-between px-2 mb-3">
@@ -44,6 +44,74 @@
         </div>
     </main>
 
+<?php
+
+
+require_once '../../config/dbauth.php';
+$conn = new mysqli($hn, $un, $pw, $db);
+if($conn->connect_error) die($conn->connect_error);
+
+if (isset($_POST['Email']) && isset($_POST['Password'])) {
+	
+	//Get values from login screen
+	$tmp_username = mysql_entities_fix_string($conn, $_POST['Email']);
+	$tmp_password = mysql_entities_fix_string($conn, $_POST['Password']);
+	
+	//get password from DB w/ SQL
+	$query = "SELECT Password FROM lib_account WHERE Email = '$tmp_username'";
+	
+	$result = $conn->query($query); 
+	if(!$result) die("Query failed: ". $conn->error);
+	
+	$rows = $result->num_rows;
+	$passwordFromDB="";
+	for($j=0; $j<$rows; $j++)
+	{
+		$result->data_seek($j); 
+		$row = $result->fetch_array(MYSQLI_ASSOC);
+		$passwordFromDB = $row['Password'];
+	
+	}
+	
+	//Compare passwords
+	if(password_verify($tmp_password,$passwordFromDB))
+	{
+		echo "successful login<br>";
+		
+        // Start session and redirect to home.php
+        session_start();
+        $_SESSION['email'] = $tmp_username;
+        
+        // Redirect to home.php
+        header("Location: home.php");
+		exit();
+	}
+	else
+	{
+		header("Location: login.php");
+		echo "unsuccessful login<br>";
+		exit();
+	}	
+	
+}
+
+$conn->close();
+
+
+//sanitization functions
+function mysql_entities_fix_string($conn, $string){
+	return htmlentities(mysql_fix_string($conn, $string));	
+}
+
+function mysql_fix_string($conn, $string){
+	$string = stripslashes($string);
+	return $conn->real_escape_string($string);
+}
+
+
+
+?>
 
 <!-- Footer -->
 <?php include_once '../partials/footer.php'; ?>
+
