@@ -40,3 +40,19 @@
     -webkit-line-clamp: 6; /* Number of lines before truncation */
     height: calc(1.5em * 6); /* Adjust based on line height and number of lines */
 }
+
+.class-item-img, .event-item-img {
+    height: 12rem;
+    object-fit: cover;
+}
+
+.slot-item:hover {
+    cursor: pointer;
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
+    transition: 250ms;
+}
+
+.custom-tooltip {
+    background-color: inherit;
+    color: black;
+}

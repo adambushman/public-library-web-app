@@ -166,7 +166,7 @@ INSERT INTO LIB_EVENT (Title, Description, ImagePath) VALUES
 ('Holiday Craft Session', 'Create your own Christmas ornament! Join us for a festive crafting session.', 'ImageDirectory/event-img-1.webp'),
 ('Book Fair', 'Explore a wide range of books at our annual book fair. All genres, all ages!', 'ImageDirectory/book-fair.jpg'),
 ('Local History Day: Ogden, Utah', 'Discover the rich history of our local area through stories, exhibits, and guest speakers.', 'ImageDirectory/event-img-2.jpg'),
-('Movie Night: Night at the Museum', 'Join us for a fun family movie night featuring "Night at the Museum".', 'ImageDirectory/event-img-3.jpg'),
+('Movie Night: Night at the Museum', 'Join us for a fun family movie night featuring \'Night at the Museum\'.', 'ImageDirectory/event-img-3.jpg'),
 ('Story Hour', 'Bring the kids for a delightful story hour filled with fun and imagination. Perfect for children of all ages!', 'ImageDirectory/story-hour.jpg');
 
 INSERT INTO LIB_EVENT_SCHEDULE (Date, Time, EventID, RoomID) VALUES
