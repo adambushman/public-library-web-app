@@ -16,7 +16,7 @@ echo <<<_END
 							<a class="nav-link" href="view-catalog.php">Catalog</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="404.php">Classes</a>
+							<a class="nav-link" href="view-classes.php">Classes</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="404.php">Events</a>

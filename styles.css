@@ -40,3 +40,8 @@
     -webkit-line-clamp: 6; /* Number of lines before truncation */
     height: calc(1.5em * 6); /* Adjust based on line height and number of lines */
 }
+
+.class-item-img {
+    height: 12rem;
+    object-fit: cover;
+}
