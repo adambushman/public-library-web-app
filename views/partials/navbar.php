@@ -1,5 +1,12 @@
 <?php
 
+session_start();
+
+$authenticated = isset($_SESSION['email']);
+
+$authPath = $authenticated ? "../../controllers/authentication/logout-controller.php" : "login.php";
+$authLang = $authenticated ? "Logout" : "Login";
+
 echo <<<_END
 
 <header>
@@ -21,14 +28,21 @@ echo <<<_END
 						<li class="nav-item">
 							<a class="nav-link" href="404.php">Events</a>
 						</li>
+_END;
+if($authenticated) {
+echo <<<_END
 						<li class="nav-item">
 							<a class="nav-link" href="view-employees.php">Staff</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="404.php">Account</a>
+							<a class="nav-link" href="temp-view-account.php">Account</a>
 						</li>
+_END;
+}
+echo <<<_END
+
 						<li class="nav-item">
-							<a class="nav-link" href="logout.php">Logout</a>
+							<a class="nav-link" href="$authPath">$authLang</a>
 						</li>
 					</ul>
 				</div>

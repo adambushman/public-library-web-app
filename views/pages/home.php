@@ -4,14 +4,6 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
-<!-- Login Check -->
-<?php// Check if the user is logged in
-if (!isset($_SESSION['email'])) {
-    // If not, redirect to login page
-    header("Location: logout.php");
-    exit();
-} ?>
-
 
 <main>
   <div id="homeHero" class="container-fluid">
