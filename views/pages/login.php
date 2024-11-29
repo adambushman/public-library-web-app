@@ -9,11 +9,11 @@
         <div class="container container-fluid d-flex flex-column align-items-evenly">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-8 col-xl-6 col-xxl-4">
-                    <div class="card">
+                    <div class="card my-5">
 						<img class="card-img-top" src="../../ImageDirectory/library1.jpeg" alt="">      
                         <div class="card-body">
 							<h2>Login to Your Account</h2>
-                            <form action="" class="w-md-75 justify-content-center">
+                            <form action="../../controllers/authentication/login-controller.php" method="POST" class="w-md-75 justify-content-center">
                                 <div class="my-3">
                                     <label for="emailInput" class="form-label">Email address</label>
                                     <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@example.com">
@@ -23,7 +23,7 @@
                                     <input type="password" class="form-control" id="passwordInput" name="password" placeholder="************">
                                 </div>
                                 <div class="d-grid">
-                                    <a href="home.php" class="btn btn-dark my-3">Login</a>
+                                    <button type="submit" class="btn btn-dark my-3">Login</button>
                                 </div>
                                 <hr>
                                 <div class="d-flex justify-content-between px-2 mb-3">
@@ -47,3 +47,4 @@
 
 <!-- Footer -->
 <?php include_once '../partials/footer.php'; ?>
+

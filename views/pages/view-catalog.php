@@ -34,6 +34,12 @@
                         <a class="btn btn-sm btn-info" href="add-item.php">
                             <i class="bi bi-plus-square pe-2"></i>Add Item
                         </a>
+                        <a class="btn btn-sm btn-info" href="update-item.php">
+                            <i class="bi bi-check-square pe-2"></i>Update Item
+                        </a>	
+
+                        </a>							
+						
                         <button class="btn btn-sm btn-secondary d-lg-none d-inline-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">
                             <i class="bi bi-funnel pe-2"></i>Filter Catalog
                         </button>

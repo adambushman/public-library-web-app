@@ -11,42 +11,44 @@ $conn = connect();
 $query = <<<_END
     WITH
     VALS AS (
-    SELECT ItemTypeID AS ID, Name, 'ItemType' AS `Field` 
-    FROM LIB_ITEM_TYPE 
+    SELECT ItemTypeID AS ID, Name, NULL AS description, 'ItemType' AS `Field` 
+    FROM LIB_ITEM_TYPE
     UNION ALL 
-    SELECT *, 'MediaType' AS `Field` 
-    FROM LIB_MEDIA_TYPE 
-    UNION ALL 
-    SELECT *, 'Genre' AS `Field` 
-    FROM LIB_GENRE 
-    UNION ALL 
-    SELECT lc.CreatorID, lc.Name, 'Creator' AS `Field` 
-    FROM LIB_CREATOR lc 
-    UNION ALL 
-    SELECT lp.PublisherID, lp.Name, 'Publisher' AS `Field` 
-    FROM LIB_PUBLISHER lp 
-    UNION ALL 
-    SELECT lct.*, 'CreatorType' AS `Field` 
-    FROM LIB_CREATOR_TYPE lct 
-    UNION ALL 
-    SELECT lpt.*, 'PublisherType' AS `Field` 
-    FROM LIB_PUBLISHER_TYPE lpt 
+	SELECT MediaTypeID AS ID, Name, NULL AS description, 'MediaType' AS `Field`
+	FROM LIB_MEDIA_TYPE 
+	UNION ALL 
+	SELECT GenreID AS ID, Name, description, 'Genre' AS `Field` 
+	FROM LIB_GENRE 
+	UNION ALL 
+	SELECT CreatorID AS ID, Name, NULL AS description, 'Creator' AS `Field` 
+	FROM LIB_CREATOR lc 
+	UNION ALL 
+	SELECT PublisherID AS ID, Name, description, 'Publisher' AS `Field` 
+	FROM LIB_PUBLISHER lp 
+	UNION ALL 
+	SELECT CreatorTypeID AS ID, Name, NULL AS description, 'CreatorType' AS `Field` 
+	FROM LIB_CREATOR_TYPE lct 
+	UNION ALL 
+	SELECT PublisherTypeID AS ID, Name, NULL AS description, 'PublisherType' AS `Field` 
+	FROM LIB_PUBLISHER_TYPE lpt
     )
     SELECT 
-    `Field`
-    ,CONCAT('[', 
-    GROUP_CONCAT(
-    DISTINCT CONCAT(
-        '{"id":', ID, 
-        ',"name":"', Name, '"}'
-    )
-    SEPARATOR ','
-    ), 
-    ']') AS `Records`
+	`Field`,
+	CONCAT('[', 
+	GROUP_CONCAT(
+	DISTINCT CONCAT(
+	'{"id":', ID, 
+	',"name":"', Name, '"', 
+	(CASE WHEN description IS NOT NULL THEN ', "description": "' + description + '"' ELSE '' END)
+	,'}'
+	)
+	SEPARATOR ','), 
+	']') AS `Records`
     FROM VALS
     GROUP BY `Field`
     ORDER BY `Field`
 _END;
+
 $result = $conn->query($query);
 
 $result->data_seek(0);

@@ -4,6 +4,7 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+
 <main>
   <div id="homeHero" class="container-fluid">
     <div class="row h-100 align-items-center justify-content-center">
