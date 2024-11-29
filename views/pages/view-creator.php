@@ -9,34 +9,36 @@
         <div class="row justify-content-center">
             <?php
                 require_once '../../config/dbauth.php';
-
-                $creatorId = $_GET['creatorId'];
+                require_once '../../helpers.php';
 
                 $conn = connect();
-                $query = <<<_END
-                SELECT 
-                lc.CreatorID, lc.Name, lc.Gender, lc.DateBorn, lc.DateDied, lc.Bio, lc.ImagePath, lct.Name AS `CreatorType`, 
-                CONCAT('[', 
-                GROUP_CONCAT(
-                    DISTINCT CONCAT(
-                        '{"id":', li.ItemID, 
-                        ',"title":"', li.Title, 
-                        '","description":"', li.Description, 
-                        '","image":"', li.ImagePath, '"}'
-                    )
-                    SEPARATOR ','
-                ), 
-                ']') AS `Works`
-                FROM LIB_ITEM_CREATOR lic
-                INNER JOIN LIB_CREATOR lc ON lc.CreatorID = lic.CreatorID
-                INNER JOIN LIB_CREATOR_TYPE lct ON lct.CreatorTypeID = lc.CreatorTypeID
-                LEFT JOIN LIB_ITEM li ON li.ItemID = lic.ItemID
-                WHERE lc.CreatorID = $creatorId
+                $creatorId = prepSanitaryData($conn, $_GET['creatorId']);
+
+                $queryFramework = <<<_END
+                    SELECT 
+                    lc.CreatorID, lc.Name, lc.Gender, lc.DateBorn, lc.DateDied, lc.Bio, lc.ImagePath, lct.Name AS `CreatorType`, 
+                    CONCAT('[', 
+                    GROUP_CONCAT(
+                        DISTINCT CONCAT(
+                            '{"id":', li.ItemID, 
+                            ',"title":"', li.Title, 
+                            '","description":"', li.Description, 
+                            '","image":"', li.ImagePath, '"}'
+                        )
+                        SEPARATOR ','
+                    ), 
+                    ']') AS `Works`
+                    FROM LIB_ITEM_CREATOR lic
+                    INNER JOIN LIB_CREATOR lc ON lc.CreatorID = lic.CreatorID
+                    INNER JOIN LIB_CREATOR_TYPE lct ON lct.CreatorTypeID = lc.CreatorTypeID
+                    LEFT JOIN LIB_ITEM li ON li.ItemID = lic.ItemID
+                    WHERE lc.CreatorID = ?
                 _END;
+                $queryStmt = $conn->prepare($queryFramework);
+                $queryStmt->bind_param("i", $creatorId);
+                $queryStmt->execute();
 
-                $result = $conn->query($query);
-                $rows = $result->num_rows;
-
+                $result = $queryStmt->get_result();
                 $result->data_seek(0); 
                 $row = $result->fetch_array(MYSQLI_ASSOC);
 
@@ -46,6 +48,8 @@
                     $row['DateBorn'] != NULL ? sprintf("%s", date("F j, Y", strtotime($row['DateBorn']))) : '', 
                     $row['DateDied'] != NULL ? sprintf("%s", date("F j, Y", strtotime($row['DateDied']))) : ''
                 );
+                var_dump($row['DateDied']);
+                die();
 
                 echo <<<_END
                     <div class="col-8 col-md-4 col-xl-2">

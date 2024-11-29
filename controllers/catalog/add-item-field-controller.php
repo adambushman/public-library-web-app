@@ -1,22 +1,47 @@
 <?php
 
+header('Content-Type: application/json');
 require_once '../../config/dbauth.php';
+require_once '../../helpers.php';
+
 $conn = connect();
 
-// Add the new field
-$name = $_POST['name']; 
-$table = $_POST['table'];
-$inputField = $_POST['inputField'];
-$reopen = $_POST['reopen'];
+// Clean the inputs
+// `prepSanitaryData()` comes from "helpers.php"
+$name = prepSanitaryData($conn, $_POST['name']); 
+$table = prepSanitaryData($conn, $_POST['table']);
+$inputField = prepSanitaryData($conn, $_POST['inputField']);
+$reopen = prepSanitaryData($conn, $_POST['reopen']);
 
-$query = <<<_END
-    INSERT INTO $table (Name) VALUES
-    ('$name')
+
+// Validate the inputs
+
+
+// Add the field value
+$queryFramework = <<<_END
+    INSERT INTO $table (Name)
+    VALUES (?)
 _END;
 
-$result = $conn->query($query);
+$queryStmt = $conn->prepare($queryFramework);
+
+$queryStmt->bind_param(
+    "s", $name
+);
+
+$result = $queryStmt->execute();
 if(!$result) echo $conn->error; //saveMsg("Could not add gift card; Error: $conn->error", 'failure', '../Views/Pages/card-add.php');
-$itemId = $conn->insert_id;
+$fieldId = $conn->insert_id;
 
 // Respond with the creator 'id' and 'name'
-echo "{\"id\": $itemId, \"name\": \"$name\", \"input_field\": \"$inputField\", \"reopen\": \"$reopen\"}";
+
+echo json_encode([
+    'id' => $fieldId, 
+    'name' => prepOutput($name), 
+    'input_field' => $inputField, 
+    'reopen' => $reopen
+]);
+
+$queryStmt->close();
+$conn->close();
+exit();

@@ -50,19 +50,19 @@ _END;
 $result = $conn->query($query);
 
 $result->data_seek(0);
-$creators = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
+$creators = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
 $result->data_seek(1);
-$creatorTypes = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
+$creatorTypes = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
 $result->data_seek(2);
-$genres = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
+$genres = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
 $result->data_seek(3);
-$itemTypes = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
+$itemTypes = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
 $result->data_seek(4);
-$mediaTypes = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
+$mediaTypes = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
 $result->data_seek(5);
-$publishers = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
+$publishers = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
 $result->data_seek(6);
-$publisherTypes = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
+$publisherTypes = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
 
 $result->close();
 $conn->close();
@@ -73,26 +73,27 @@ $conn->close();
         <div class="row justify-content-center mt-5">
             <div class="col-12 col-md-8">
                 <h1 class="display-4 text-center">Add item to library</h1>
+                <p class="text-center"><i>* required inputs</i></p>
                 <form class="row justify-content-between g-3 mt-5" action="../../controllers/catalog/add-item-controller.php" method="post" enctype="multipart/form-data">
                     <div class="col-12 text-bg-secondary rounded px-2 py-1">
                         <h5 class="mb-0">Item Details</h5>
                     </div>
                     <div class="col-md-9">
-                        <label for="#title-in" class="col-form-label fw-bold">Title</label>
+                        <label for="#title-in" class="col-form-label fw-bold">*Title</label>
                         <input id="title-in" class="form-control" type="text" name="title" aria-label="Item title input" required>
                     </div>
                     <div class="col-md-3">
-                        <label for="#year" class="col-form-label fw-bold">Release Year</label>
+                        <label for="#year" class="col-form-label fw-bold">*Release Year</label>
                         <input id="year" class="form-control" type="number" name="year" aria-label="Release year input" min="1000" max="2025" required>
                     </div>
 
                     <div class="col-12">
-                        <label for="#description-in" class="col-form-label fw-bold">Description</label>
+                        <label for="#description-in" class="col-form-label fw-bold">*Description</label>
                         <textarea class="form-control" name="description" id="description-in" rows="4" required></textarea>
                     </div>
 
                     <div class="col-md-4">
-                        <label for="#item-type-in" class="col-form-label fw-bold">Item Type</label>
+                        <label for="#item-type-in" class="col-form-label fw-bold">*Item Type</label>
                         <div class="input-group">
                             <select id="item-type-in" class="form-select" name="itemType" aria-label="Item type input" required>
                             <?php
@@ -114,7 +115,7 @@ $conn->close();
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <label for="#media-in" class="col-form-label fw-bold">Media Type</label>
+                        <label for="#media-in" class="col-form-label fw-bold">*Media Type</label>
                         <div class="input-group">                            
                             <select id="media-in" class="form-select" name="mediaType" aria-label="Media type input" required>
                             <?php
@@ -136,7 +137,7 @@ $conn->close();
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <label for="#genre-in" class="col-form-label fw-bold">Genre</label>
+                        <label for="#genre-in" class="col-form-label fw-bold">*Genre</label>
                         <div class="input-group">
                             <select id="genre-in" class="form-select" name="genre" aria-label="Genre input" required>
                             <?php
@@ -159,7 +160,7 @@ $conn->close();
                     </div>
 
                     <div class="col-md-3">
-                        <label for="#copies" class="col-form-label fw-bold">Number of Copies</label>
+                        <label for="#copies" class="col-form-label fw-bold">*Number of Copies</label>
                         <input id="copies" class="form-control" type="number" name="copies" aria-label="Copies number input" min="1" max="10" required>
                     </div>
                     <div class="col-md-3">
@@ -167,7 +168,7 @@ $conn->close();
                         <input id="issue" class="form-control" type="number" name="issue" aria-label="Issue number input" min="1">
                     </div>
                     <div class="col-md-6">
-                        <label for="#imgUpload" class="col-form-label fw-bold">Item Image</label>
+                        <label for="#imgUpload" class="col-form-label fw-bold">*Item Image</label>
                         <input class="form-control" type="file" name="imgUpload" id="imgUpload" aria-label="Card image upload" required>
                     </div>
 
@@ -176,7 +177,7 @@ $conn->close();
                     </div>
                     <div class="col-md-5">
                         <div id="creator-input-fields" style="min-height: 10rem">
-                            <label for="#creator-in" class="col-form-label fw-bold">Creators</label>
+                            <label for="#creator-in" class="col-form-label fw-bold">*Creators</label>
                             <div class="input-group">
                                 <select id="creator-in" class="form-select form-select-sm" name="creator1" aria-label="Creator input" required>
                                     <?php
@@ -200,7 +201,7 @@ $conn->close();
                     </div>
                     <div class="col-md-5">
                         <div id="publisher-input-fields" style="min-height: 10rem">
-                            <label for="#publisher-in" class="col-form-label fw-bold">Publishers</label>
+                            <label for="#publisher-in" class="col-form-label fw-bold">*Publishers</label>
                             <div class="input-group">
                                 <select id="publisher-in" class="form-select form-select-sm" name="publisher1" aria-label="Publisher input" required>
                                     <?php
@@ -227,16 +228,17 @@ $conn->close();
                         <h5 class="mb-0">Library Details</h5>
                     </div>
                     <div class="col-md-4">
-                        <label for="#isbn" class="col-form-label fw-bold">ISBN-13 Code</label>
+                        <label for="#isbn" class="col-form-label fw-bold">*ISBN-13 Code</label>
                         <input id="isbn" class="form-control" type="text" name="isbn" aria-label="ISBN 13 code input" required>
                     </div>
                     <div class="col-md-4">
-                        <label for="#location" class="col-form-label fw-bold">Location Code</label>
+                        <label for="#location" class="col-form-label fw-bold">*Location Code</label>
                         <input id="location" class="form-control" type="text" name="location" aria-label="Location input" required>
                     </div>
 
-                    <div class="my-5 d-grid">
+                    <div class="my-5 d-grid gap-2">
                         <button type="submit" class="btn btn-success">Add Item</button>
+                        <a href="view-catalog.php" class="btn btn-light">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -256,11 +258,11 @@ $conn->close();
             <div class="modal-body">
                 <form id="creator-form" class="row g-3">
                     <div class="col-md-9">
-                        <label for="#name-in" class="col-form-label fw-bold">Name</label>
+                        <label for="#name-in" class="col-form-label fw-bold">*Creator Name</label>
                         <input id="name-in" class="form-control" type="text" name="name" aria-label="Name input" required>
                     </div>
                     <div class="col-md-3">
-                        <label for="#gender-in" class="col-form-label fw-bold">Gender</label>
+                        <label for="#gender-in" class="col-form-label fw-bold">*Gender</label>
                         <select id="gender-in" class="form-select" name="gender" aria-label="Gender input" required>
                             <option selected disabled></option>
                             <option value="M">Male</option>
@@ -269,23 +271,23 @@ $conn->close();
                     </div>
 
                     <div class="col-12">
-                        <label for="#bio-in" class="col-form-label fw-bold">Biography</label>
+                        <label for="#bio-in" class="col-form-label fw-bold">*Biography</label>
                         <textarea class="form-control" name="bio" id="bio-in" rows="4" required></textarea>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="#date-born-in" class="col-form-label fw-bold">Birth Date</label>
+                        <label for="#date-born-in" class="col-form-label fw-bold">*Birth Date</label>
                         <input class="form-control" type="date" name="dateBorn" id="date-born-in" aria-label="Date born input" required>
                     </div>
                     <div class="col-md-6">
                         <label for="#date-died-in" class="col-form-label fw-bold">Death Date</label>
-                        <input class="form-control" type="date" name="dateDied" id="date-died-in" aria-label="Date died input" required>
+                        <input class="form-control" type="date" name="dateDied" id="date-died-in" aria-label="Date died input">
                     </div>
 
                     <div class="col-md-6">
-                        <label for="#creator-type-in" class="col-form-label fw-bold">Creator Type</label>
+                        <label for="#creator-type-in" class="col-form-label fw-bold">*Creator Type</label>
                         <div class="input-group">
-                            <select id="creator-type-in" class="form-select" name="creatorType" aria-label="Creator type input">
+                            <select id="creator-type-in" class="form-select" name="creatorType" aria-label="Creator type input" required>
                             <?php
                             echo <<<_END
                                 <option selected disabled></option>
@@ -305,7 +307,7 @@ $conn->close();
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label for="#imgUpload" class="col-form-label fw-bold">Creator Image</label>
+                        <label for="#imgUpload" class="col-form-label fw-bold">*Creator Image</label>
                         <input class="form-control" type="file" name="imgUpload" id="imgUpload" aria-label="Creator image upload" required>
                     </div>
                     
@@ -333,11 +335,11 @@ $conn->close();
                 <div class="modal-body">
                     <form id="publisher-form" class="row g-3">
                         <div class="col-12">
-                            <label for="#name-in" class="col-form-label fw-bold">Name</label>
+                            <label for="#name-in" class="col-form-label fw-bold">*Publisher Name</label>
                             <input id="name-in" class="form-control" type="text" name="name" aria-label="Publisher name input" required>
                         </div>
                         <div class="col-12">
-                            <label for="#publisher-type-in" class="col-form-label fw-bold">Publisher Type</label>
+                            <label for="#publisher-type-in" class="col-form-label fw-bold">*Publisher Type</label>
                             <div class="input-group">
                                 <select id="publisher-type-in" class="form-select" name="publisherType" aria-label="Publisher type input" required>
                                 <?php
@@ -384,7 +386,7 @@ $conn->close();
                 <div class="modal-body">
                     <form id="new-item-form" class="row g-3">
                         <div class="col-12">
-                            <label for="#name-in" class="col-form-label fw-bold">Name</label>
+                            <label for="#name-in" class="col-form-label fw-bold">*Field Name</label>
                             <input id="name-in" class="form-control" type="text" name="name" aria-label="Item name input" required>
                         </div>
 

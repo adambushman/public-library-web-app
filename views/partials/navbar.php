@@ -19,10 +19,10 @@ echo <<<_END
 							<a class="nav-link" href="view-classes.php">Classes</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="view-schedule.php">Schedule</a>
+							<a class="nav-link" href="view-events.php">Events</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="view-events.php">Events</a>
+							<a class="nav-link" href="view-schedule.php">Schedule</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="view-employees.php">Staff</a>

@@ -1,3 +1,10 @@
+// Function to decode HTML entities
+function decodeHtmlEntities(str) {
+    var doc = new DOMParser().parseFromString(str, 'text/html');
+    return doc.documentElement.textContent || doc.body.textContent;
+}
+
+
 // Logic to fire off a post request for a new "creator", 
 // then add creator as option for selection
 document.getElementById("creator-form").addEventListener("submit", function(event) {
@@ -17,7 +24,7 @@ document.getElementById("creator-form").addEventListener("submit", function(even
         [...creator_inputs].forEach(ci => {
             const option = document.createElement("option");
             option.value = creator.id;
-            option.textContent = creator.name;
+            option.textContent = decodeHtmlEntities(creator.name);
             ci.appendChild(option);
         
             if(ci.selectedIndex == 0 & !populated) {
@@ -44,7 +51,7 @@ document.getElementById("creator-form").addEventListener("submit", function(even
 document.getElementById("publisher-form").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent the default form submission behavior
     const formData = new FormData(this); // Gather form data
-    
+
     fetch("../../controllers/catalog/add-publisher-controller.php", {
         method: "POST",
         body: formData
@@ -58,7 +65,7 @@ document.getElementById("publisher-form").addEventListener("submit", function(ev
         [...publisher_inputs].forEach(pi => {
             const option = document.createElement("option");
             option.value = publisher.id;
-            option.textContent = publisher.name;
+            option.textContent = decodeHtmlEntities(publisher.name);
             pi.appendChild(option);
         
             if(pi.selectedIndex == 0 & !populated) {
@@ -107,13 +114,14 @@ document.getElementById("new-item-form").addEventListener("submit", function(eve
     })
     .then(response => response.text()) // Handle the response (can be JSON or text)
     .then(data => {
+        console.log(data);
         const new_value = JSON.parse(data);
 
         const inputField = document.getElementById(new_value.input_field);
         [...inputField.children].forEach(c => c.selected = false);
         const option = document.createElement("option");
         option.value = new_value.id;
-        option.textContent = new_value.name;
+        option.textContent = decodeHtmlEntities(new_value.name);
         option.selected = true;
         inputField.appendChild(option);
 
