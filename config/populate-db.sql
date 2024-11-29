@@ -161,6 +161,22 @@ INSERT INTO LIB_CLASS (Title, Description, DurationMins, ImagePath) VALUES
 ('Introduction to Coding', 'This class provides a beginner-friendly introduction to coding using easy-to-understand languages. Perfect for those looking to start their tech journey with no prior experience.', 60, 'ImageDirectory/class-img-2.avif'),
 ('Mindfulness and Meditation', 'Join us for a relaxing class focused on mindfulness techniques, meditation practices, and stress management. Ideal for anyone looking to improve mental well-being and find calm in daily life.', 30, 'ImageDirectory/class-img-1.webp');
 
+-- Insert sample event records
+INSERT INTO LIB_EVENT (Title, Description, ImagePath) VALUES
+('Holiday Craft Session', 'Create your own Christmas ornament! Join us for a festive crafting session.', 'ImageDirectory/event-img-1.webp'),
+('Book Fair', 'Explore a wide range of books at our annual book fair. All genres, all ages!', 'ImageDirectory/book-fair.jpg'),
+('Local History Day: Ogden, Utah', 'Discover the rich history of our local area through stories, exhibits, and guest speakers.', 'ImageDirectory/event-img-2.jpg'),
+('Movie Night: Night at the Museum', 'Join us for a fun family movie night featuring \'Night at the Museum\'.', 'ImageDirectory/event-img-3.jpg'),
+('Story Hour', 'Bring the kids for a delightful story hour filled with fun and imagination. Perfect for children of all ages!', 'ImageDirectory/story-hour.jpg');
+
+INSERT INTO LIB_EVENT_SCHEDULE (Date, Time, EventID, RoomID) VALUES
+('2024-12-09', '16:00:00', 1, 2), -- Holiday Craft Session in Amazon
+('2024-11-15', '10:00:00', 2, 5), -- Book Fair in Pacific
+('2024-11-10', '14:00:00', 3, 4), -- Local History Day in Kalahari
+('2024-11-18', '18:00:00', 4, 3), -- Movie Night in Sierra
+('2024-11-07', '11:00:00', 5, 1), -- November Story Hour in Everest
+('2024-12-12', '11:00:00', 5, 1); -- December Story Hour in Everest
+
 INSERT INTO LIB_CLASS_INSTRUCTOR (ClassID, InstructorID) VALUES
 (2, 1), -- Creative Writing for Adults with Dr. John Doe
 (3, 2), -- Digital Photography Basics with Prof. Jane Smith

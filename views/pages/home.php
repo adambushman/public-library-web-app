@@ -9,9 +9,9 @@
     <div class="row h-100 align-items-center justify-content-center">
       <div class="col-12 col-md-8 text-center">
         <h1 class="text-img-overlay display-1 text-white fw-bold mb-5">Welcome to the Library</h1>
-        <form action="">
+        <form action="view-catalog.php" method="GET">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="i.e. To Kill A Mockingbird" aria-label="Search" aria-describedby="basic-addon2">
+              <input name="searchTerm" type="text" class="form-control" placeholder="i.e. To Kill A Mockingbird" aria-label="Search" aria-describedby="basic-addon2">
               <button class="btn btn-primary btn-outline-light" id="search">
                 <i class="bi bi-search"></i>
               </span>
@@ -26,16 +26,17 @@
   <div class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <div class="col">
-        <div class="card text-center">
+        <div class="card text-center border-primary">
           <div class="card-body text-primary">
             <h1><i class="bi bi-collection-fill"></i></h1>
             <h3 class="mb-3">Comprehensive Catalog</h3>
             <p class="text-black mb-0">Explore our comprehensive catalog of books, music, movies, and more—something for every interest and age. Discover your next favorite!</p>
+            <a href="view-catalog.php" class="stretched-link"></a>
           </div>
         </div>
       </div>
       <div class="col">
-        <div class="card text-center">
+        <div class="card text-center border-success">
           <div class="card-body text-success">
             <h1><i class="bi bi-easel3-fill"></i></h1>
             <h3 class="mb-3">Engaging Classes</h3>
@@ -44,7 +45,7 @@
         </div>
       </div>
       <div class="col">
-        <div class="card text-center">
+        <div class="card text-center border-danger">
           <div class="card-body text-danger">
             <h1><i class="bi bi-calendar-event-fill"></i></h1>
             <h3 class="mb-3">Exciting Events</h3>

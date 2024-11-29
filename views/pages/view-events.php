@@ -10,49 +10,38 @@
             <aside class="col-lg-3 pe-5">
                 <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="offcanvasResponsive" aria-labelledby="offcanvasResponsiveLabel">
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasResponsiveLabel">Filter Catalog</h5>
+                        <h5 class="offcanvas-title" id="offcanvasResponsiveLabel">Filter Classes</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasResponsive" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
                         <div class="input-group flex-nowrap">
                             <span class="input-group-text" id="addon-wrapping"><i class="bi bi-search"></i></span>
-                            <input id="searchBar" type="text" name="search" class="form-control" aria-label="Search" aria-describedby="addon-wrapping"
-                            value="<?php 
-                                if(isset($_GET['searchTerm'])) {
-                                    echo $_GET['searchTerm'];
-                                }
-                            ?>"
-                            >
+                            <input disabled type="text" name="search" class="form-control" aria-label="Search" aria-describedby="addon-wrapping">
                         </div>
                     </div>
                 </div>
             </aside>
             <section class="col-12 col-lg-9">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h2>Library Catalog</h2>
+                    <h2>Events Catalog</h2>
                     <div>
-                        <a class="btn btn-sm btn-info" href="add-item.php">
-                            <i class="bi bi-plus-square pe-2"></i>Add Item
+                        <a class="btn btn-sm btn-info" href="#" disabled>
+                            <i class="bi bi-plus-square pe-2"></i>Add Event
                         </a>
                         <button class="btn btn-sm btn-secondary d-lg-none d-inline-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">
-                            <i class="bi bi-funnel pe-2"></i>Filter Catalog
+                            <i class="bi bi-funnel pe-2"></i>Filter Events
                         </button>
                     </div>
                 </div>
                 <hr>
-                <div class="row row-cols-1 row-cols-md-3 row-cols-xl-5 g-2">
+                <div class="row row-cols-1 row-cols-md-3 row-cols-xl-4 g-2">
                     <?php
                     require_once '../../config/dbauth.php';
 
                     $conn = connect();
                     $query = <<<_END
-                        SELECT 
-                        li.ItemID, li.Title, li.Description, GROUP_CONCAT(lc.Name SEPARATOR ', ') AS Names, li.Year, li.ImagePath
-                        FROM LIB_ITEM_CREATOR lic
-                        INNER JOIN LIB_ITEM li ON li.ItemID = lic.ItemID
-                        INNER JOIN LIB_CREATOR lc ON lc.CreatorID = lic.CreatorID
-                        GROUP BY
-                        li.ItemID, li.Title, li.Description, li.Year, li.ImagePath
+                        SELECT * 
+                        FROM LIB_EVENT le
                     _END;
                     $result = $conn->query($query);
                     $rows = $result->num_rows;
@@ -64,15 +53,14 @@
                         $img = ($row['ImagePath'] ?? 'ImageDirectory/default-image.jpg');
 
                         echo <<<_END
-                        <div class="col catalog-item">
+                        <div class="col">
                             <div class="card border-0">
-                                <img src="../../$img" class="card-img-top catalog-item-img mb-3" alt="...">
-                                <div class="card-body border rounded" style="height:16rem">
-                                    <h5 class="card-title mb-0">$row[Title]</h5>
-                                    <p class="small mb-3">$row[Names]</p>
+                                <img src="../../$img" class="card-img-top event-item-img mb-3" alt="...">
+                                <div class="card-body border rounded" style="height:13rem">
+                                    <h5 class="card-title mb-2">$row[Title]</h5>
                                     <p class="card-text small text-truncate-multiline">$row[Description]</p>
                                 </div>
-                                <a class="stretched-link" href="view-item.php?itemId=$row[ItemID]"></a>
+                                <a class="stretched-link" href="view-event.php?eventId=$row[EventID]"></a>
                             </div>
                         </div>
                         _END;
@@ -83,8 +71,6 @@
         </div>
     </div>
 </main>
-
-<script src="../../public/assets/javascript/catalog/catalog-search.js"></script>
 
 <!-- Footer -->
 <?php include_once '../partials/footer.php'; ?>
