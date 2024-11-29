@@ -31,7 +31,7 @@
                                         <i class="bi bi-info-circle-fill pe-1"></i>
                                         Need Help Logging In?
                                     </a>
-                                    <a href="#">
+                                    <a href="add-user.php">
                                         Create an Account
                                         <i class="bi bi-book-fill ps-1"></i>
                                     </a>
