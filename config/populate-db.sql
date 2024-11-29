@@ -148,18 +148,18 @@ INSERT INTO LIB_ITEM_PUBLISHER (ItemID, PublisherID) VALUES
 ;
 
 INSERT INTO LIB_INSTRUCTOR (Name, Gender, Bio, ImagePath) VALUES
-('Dr. John Doe', 'M', 'Dr. John Doe is an experienced educator with a passion for literature and history. He has been teaching for over 20 years and specializes in American and English literature.', NULL),
-('Prof. Jane Smith', 'F', 'Professor Jane Smith is a renowned scholar in the field of modern European history. With a focus on 20th-century events, she brings a wealth of knowledge and experience to her students.', NULL),
-('Ms. Rachel Boone', 'F', 'Miss Rachel is a creative art instructor who loves inspiring kids and moms to explore painting together in a fun and interactive way.', NULL),
-('Dr. Emily White', 'F', 'Dr. Emily White holds a PhD in Comparative Literature and has a deep interest in cultural studies. She has written several papers on post-colonial literature and teaches courses on global literary traditions.', NULL);
+('Dr. John Doe', 'M', 'Dr. John Doe is an experienced educator with a passion for literature and history. He has been teaching for over 20 years and specializes in American and English literature.', 'ImageDirectory/instructor-img-1.jpg'),
+('Prof. Jane Smith', 'F', 'Professor Jane Smith is a renowned scholar in the field of modern European history. With a focus on 20th-century events, she brings a wealth of knowledge and experience to her students.', 'ImageDirectory/instructor-img-4.jpg'),
+('Ms. Rachel Boone', 'F', 'Miss Rachel is a creative art instructor who loves inspiring kids and moms to explore painting together in a fun and interactive way.', 'ImageDirectory/instructor-img-3.jpg'),
+('Dr. Emily White', 'F', 'Dr. Emily White holds a PhD in Comparative Literature and has a deep interest in cultural studies. She has written several papers on post-colonial literature and teaches courses on global literary traditions.', 'ImageDirectory/instructor-img-2.jpg');
 
 -- Insert sample class records
 INSERT INTO LIB_CLASS (Title, Description, DurationMins, ImagePath) VALUES
-('Mommy and Me Art', 'A fun and creative art class designed for children and their mothers. Participants will explore various art techniques such as drawing, painting, and crafting in a supportive, hands-on environment.', 30, NULL),
-('Creative Writing', 'A writing class tailored for adults looking to express themselves through storytelling, poetry, and essays. Focus will be on developing writing skills and finding your unique voice.', 45, NULL),
-('Digital Photography Basics', 'Learn the fundamentals of digital photography, including camera settings, composition, and lighting. This class is perfect for beginners who want to improve their photography skills.', 60, NULL),
-('Introduction to Coding', 'This class provides a beginner-friendly introduction to coding using easy-to-understand languages. Perfect for those looking to start their tech journey with no prior experience.', 60, NULL),
-('Mindfulness and Meditation', 'Join us for a relaxing class focused on mindfulness techniques, meditation practices, and stress management. Ideal for anyone looking to improve mental well-being and find calm in daily life.', 30, NULL);
+('Mommy and Me Art', 'A fun and creative art class designed for children and their mothers. Participants will explore various art techniques such as drawing, painting, and crafting in a supportive, hands-on environment.', 30, 'ImageDirectory/class-img-5.jpg'),
+('Creative Writing', 'A writing class tailored for adults looking to express themselves through storytelling, poetry, and essays. Focus will be on developing writing skills and finding your unique voice.', 45, 'ImageDirectory/class-img-4.avif'),
+('Digital Photography Basics', 'Learn the fundamentals of digital photography, including camera settings, composition, and lighting. This class is perfect for beginners who want to improve their photography skills.', 60, 'ImageDirectory/class-img-3.png'),
+('Introduction to Coding', 'This class provides a beginner-friendly introduction to coding using easy-to-understand languages. Perfect for those looking to start their tech journey with no prior experience.', 60, 'ImageDirectory/class-img-2.avif'),
+('Mindfulness and Meditation', 'Join us for a relaxing class focused on mindfulness techniques, meditation practices, and stress management. Ideal for anyone looking to improve mental well-being and find calm in daily life.', 30, 'ImageDirectory/class-img-1.webp');
 
 -- Insert sample event records
 INSERT INTO LIB_EVENT (Title, Description, ImagePath) VALUES

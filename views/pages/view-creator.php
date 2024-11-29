@@ -69,7 +69,7 @@
         </div>
         <div class="row justify-content-center my-5">
             <div class="col-md-8">
-                <h3>Works at the library</h3>
+                <h3 class="mb-3">Works at the library</h3>
                 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-2">
 
                     <?php
