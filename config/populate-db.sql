@@ -63,7 +63,6 @@ INSERT INTO LIB_FEE_TYPE (Name) VALUES
 ('Late'),
 ('Damage'),
 ('Lost'),
-('Reservation'),
 ('Cleaning');
 
 INSERT INTO LIB_ACCOUNT_TYPE (Name) VALUES
@@ -266,19 +265,96 @@ INSERT INTO LIB_CLASS_SCHEDULE (Date, Time, ClassID, RoomID) VALUES
 *   > First initial + last name + '123!'
 *   > Example: 'ajohnson123!'
 */
-INSERT INTO LIB_ACCOUNT (FirstName, LastName, Phone, Email, Street, City, State, Zip, StartDate, Password, AccountTypeID) VALUES
+INSERT INTO LIB_ACCOUNT (FirstName, LastName, Phone, Email, Street, City, State, Zip, StartDate, Username, Password, AccountTypeID) VALUES
 -- Admin User
-('Alice', 'Johnson', '801-123-4567', 'alice.johnson@example.com', '123 Library St.', 'Salt Lake City', 'UT', '84101', '2024-01-01', '$2y$10$lCh5Lp4vYzJ80/lj1/UCPe1PwyFsszBNv9Drq41Qo/98KDzr2RRMu', 1),
+('Alice', 'Johnson', '801-123-4567', 'alice.johnson@example.com', '123 Library St.', 'Salt Lake City', 'UT', '84101', '2024-01-01', 'ajohnson', '$2y$10$lCh5Lp4vYzJ80/lj1/UCPe1PwyFsszBNv9Drq41Qo/98KDzr2RRMu', 1),
 
 -- Staff Users
-('Bob', 'Smith', '801-234-5678', 'bob.smith@example.com', '456 Page Ave.', 'Salt Lake City', 'UT', '84102', '2024-01-02', '$2y$10$bYdIFeikUwzdBbONUCO/POQidMX8lvfkDdHdFEum9Xo6v56TVVd5C', 2),
-('Carol', 'Taylor', '801-345-6789', 'carol.taylor@example.com', '789 Chapter Ln.', 'Salt Lake City', 'UT', '84103', '2024-01-03', '$2y$10$jLOhvJV/zUM2X9PCRnd2weW0hXhoG0o7qPwZc4sAQjqhnadUpNsNK', 2),
-('Dan', 'Brown', '801-456-7890', 'dan.brown@example.com', '101 Story Rd.', 'Salt Lake City', 'UT', '84104', '2024-01-04', '$2y$10$UolzFHG4xtkVGooRHqeH1.Z6gZj7BPZ1UPFtSD5Y/3bqKDjzxUCY.', 2),
+('Bob', 'Smith', '801-234-5678', 'bob.smith@example.com', '456 Page Ave.', 'Salt Lake City', 'UT', '84102', '2024-01-02', 'bsmith', '$2y$10$ZzUu4b8EMbqnypuIxoblYOJVzX4x5BDt.Fu1JWBmIUUxr4VzJFKJu', 2),
+('Carol', 'Taylor', '801-345-6789', 'carol.taylor@example.com', '789 Chapter Ln.', 'Salt Lake City', 'UT', '84103', '2024-01-03', 'ctaylor', '$2y$10$jLOhvJV/zUM2X9PCRnd2weW0hXhoG0o7qPwZc4sAQjqhnadUpNsNK', 2),
+('Dan', 'Brown', '801-456-7890', 'dan.brown@example.com', '101 Story Rd.', 'Salt Lake City', 'UT', '84104', '2024-01-04', 'dbrown', '$2y$10$UolzFHG4xtkVGooRHqeH1.Z6gZj7BPZ1UPFtSD5Y/3bqKDjzxUCY.', 2),
 
 -- Member Users
-('Eve', 'Davis', '801-567-8901', 'eve.davis@example.com', '202 Verse Blvd.', 'Salt Lake City', 'UT', '84105', '2024-01-05', '$2y$10$aSFB2PiV2gXlSrGWf5eJmu35KkDKWh44cHC0.rIc2NtI6nlY6Jv2y', 3),
-('Frank', 'Wilson', '801-678-9012', 'frank.wilson@example.com', '303 Epic St.', 'Salt Lake City', 'UT', '84106', '2024-01-06', '$2y$10$8mqjh9vtnAdpgR302XCkcejCRvIsJzscTgyN/0aIYU606JKwh0O5u', 3),
-('Grace', 'Miller', '801-789-0123', 'grace.miller@example.com', '404 Tale Rd.', 'Salt Lake City', 'UT', '84107', '2024-01-07', '$2y$10$wFoB6hdWMh1iZpMDsXtExujNw.XUt72w13tEpqrsgqjiU.9rAerPu', 3),
-('Hank', 'Moore', '801-890-1234', 'hank.moore@example.com', '505 Narrative Dr.', 'Salt Lake City', 'UT', '84108', '2024-01-08', '$2y$10$cs5829o0LISQ0I1jo2HusO4F8CREwMFi.QsLRoCNMvSYyFfFtge3K', 3),
-('Ivy', 'Lee', '801-901-2345', 'ivy.lee@example.com', '606 Chronicle Ave.', 'Salt Lake City', 'UT', '84109', '2024-01-09', '$2y$10$IX6jRXJzHOp2OGO1v.8uO.2MK55QeRDnulRIBHHSou9mw/6Ts/lgi', 3),
-('Jack', 'White', '801-012-3456', 'jack.white@example.com', '707 Legend Ln.', 'Salt Lake City', 'UT', '84110', '2024-01-10', '$2y$10$AxuyLeavLr5zx37Xdhls2.42eHxTaaUqlD5rU/LKWp5fo6/ODa3DG', 3);
+('Paula', 'Jones', '801-567-8901', 'paula.jones@example.com', '202 Verse Blvd.', 'Salt Lake City', 'UT', '84105', '2024-01-05', 'pjones', '$2y$10$0BnyHa63WI0Zd3GFHGsnMeoFKKksktJi/dx0Ir2R567MXJLysvBbi', 3),
+('Frank', 'Wilson', '801-678-9012', 'frank.wilson@example.com', '303 Epic St.', 'Salt Lake City', 'UT', '84106', '2024-01-06', 'fwilson', '$2y$10$8mqjh9vtnAdpgR302XCkcejCRvIsJzscTgyN/0aIYU606JKwh0O5u', 3),
+('Grace', 'Miller', '801-789-0123', 'grace.miller@example.com', '404 Tale Rd.', 'Salt Lake City', 'UT', '84107', '2024-01-07', 'gmilller', '$2y$10$wFoB6hdWMh1iZpMDsXtExujNw.XUt72w13tEpqrsgqjiU.9rAerPu', 3),
+('Hank', 'Moore', '801-890-1234', 'hank.moore@example.com', '505 Narrative Dr.', 'Salt Lake City', 'UT', '84108', '2024-01-08', 'hmoore', '$2y$10$cs5829o0LISQ0I1jo2HusO4F8CREwMFi.QsLRoCNMvSYyFfFtge3K', 3),
+('Ivy', 'Lee', '801-901-2345', 'ivy.lee@example.com', '606 Chronicle Ave.', 'Salt Lake City', 'UT', '84109', '2024-01-09', 'ilee', '$2y$10$IX6jRXJzHOp2OGO1v.8uO.2MK55QeRDnulRIBHHSou9mw/6Ts/lgi', 3),
+('Jack', 'White', '801-012-3456', 'jack.white@example.com', '707 Legend Ln.', 'Salt Lake City', 'UT', '84110', '2024-01-10', 'jwhite', '$2y$10$AxuyLeavLr5zx37Xdhls2.42eHxTaaUqlD5rU/LKWp5fo6/ODa3DG', 3);
+
+
+INSERT INTO LIB_CHECKOUT (AccountID, CheckoutDate, DueDate, ReturnDate) VALUES 
+(1, '2024-11-15', '2024-11-29', '2024-11-25'),
+(3, '2024-11-12', '2024-11-26', '2024-11-18'),
+(3, '2024-11-17', '2024-12-01', NULL),
+(3, '2024-11-25', '2024-12-09', '2024-12-05'),
+(4, '2024-11-05', '2024-11-19', NULL),
+(5, '2024-11-01', '2024-11-15', '2024-11-10'),
+(6, '2024-11-20', '2024-12-04', '2024-11-30'),
+(6, '2024-11-25', '2024-12-09', NULL),
+(7, '2024-11-18', '2024-12-02', NULL),
+(8, '2024-11-22', '2024-12-06', NULL),
+(8, '2024-11-15', '2024-11-29', '2024-11-28'),
+(9, '2024-11-10', '2024-11-24', NULL),
+(9, '2024-11-25', '2024-12-09', '2024-12-01');
+
+
+INSERT INTO LIB_CHECKOUT_ITEM (CheckoutID, ItemID) VALUES
+(1, 3),
+(2, 1),
+(3, 2),
+(3, 5),
+(3, 7),
+(4, 4),
+(5, 6),
+(6, 8),
+(6, 11),
+(7, 9),
+(8, 10),
+(8, 12),
+(8, 3),
+(9, 4),
+(9, 2),
+(10, 5),
+(10, 1),
+(10, 7),
+(11, 6),
+(11, 9),
+(12, 8),
+(12, 10),
+(13, 11),
+(13, 12);
+
+INSERT INTO LIB_FEES (CheckoutID, AccountID, FeeTypeID, Amount, PaidDate) VALUES 
+-- Account 1: One returned item, returned before due date
+(1, 1, 2, 10, '2024-11-27'), -- Damage fee for returned item
+
+-- Account 3: Multiple checkouts
+(2, 3, 1, 5, '2024-11-20'), -- Late fee for item returned after due date
+(2, 3, 4, 8, '2024-11-20'), -- Cleaning fee for returned item
+(3, 3, 3, 50, NULL),        -- Lost item fee for unreturned item
+(4, 3, 2, 15, '2024-12-10'), -- Damage fee for returned item
+
+
+-- Account 4: One checkout, no fees
+-- No fees for Account 4's CheckoutID 5
+
+-- Account 5: One returned item, returned before due date
+(6, 5, 4, 10, '2024-11-12'), -- Cleaning fee for returned item
+
+-- Account 6: Two checkouts
+(7, 6, 1, 5, '2024-12-01'), -- Late fee for item returned after due date
+(7, 6, 4, 10, '2024-12-01'), -- Cleaning fee for returned item
+(8, 6, 3, 50, NULL),        -- Lost item fee for unreturned item
+
+-- Account 7: One checkout, no return date
+(9, 7, 3, 40, NULL),        -- Lost item fee for unreturned item
+
+-- Account 8: Two checkouts
+(10, 8, 1, 10, '2024-12-07'), -- Late fee for item returned after due date
+(10, 8, 4, 5, '2024-12-07'),  -- Cleaning fee for returned item
+(11, 8, 3, 60, NULL),         -- Lost item fee for unreturned item
+
+-- Account 9: Two checkouts
+(12, 9, 3, 40, NULL),         -- Lost item fee for unreturned item
+(13, 9, 4, 20, '2024-12-02'); -- Cleaning fee for returned item
