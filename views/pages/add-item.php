@@ -8,63 +8,63 @@
 require_once('../../config/dbauth.php');
 
 $conn = connect();
+
 $query = <<<_END
-    WITH
-    VALS AS (
-    SELECT ItemTypeID AS ID, Name, NULL AS description, 'ItemType' AS `Field` 
-    FROM LIB_ITEM_TYPE
+	WITH VALS AS (
+    SELECT ItemTypeID AS ID, Name, 'ItemType' AS `Field` 
+    FROM LIB_ITEM_TYPE 
     UNION ALL 
-	SELECT MediaTypeID AS ID, Name, NULL AS description, 'MediaType' AS `Field`
-	FROM LIB_MEDIA_TYPE 
-	UNION ALL 
-	SELECT GenreID AS ID, Name, description, 'Genre' AS `Field` 
-	FROM LIB_GENRE 
-	UNION ALL 
-	SELECT CreatorID AS ID, Name, NULL AS description, 'Creator' AS `Field` 
-	FROM LIB_CREATOR lc 
-	UNION ALL 
-	SELECT PublisherID AS ID, Name, description, 'Publisher' AS `Field` 
-	FROM LIB_PUBLISHER lp 
-	UNION ALL 
-	SELECT CreatorTypeID AS ID, Name, NULL AS description, 'CreatorType' AS `Field` 
-	FROM LIB_CREATOR_TYPE lct 
-	UNION ALL 
-	SELECT PublisherTypeID AS ID, Name, NULL AS description, 'PublisherType' AS `Field` 
-	FROM LIB_PUBLISHER_TYPE lpt
+    SELECT *, 'MediaType' AS `Field` 
+    FROM LIB_MEDIA_TYPE 
+    UNION ALL 
+    SELECT *, 'Genre' AS `Field` 
+    FROM LIB_GENRE 
+    UNION ALL 
+    SELECT lct.CreatorTypeID, lct.Name, 'CreatorType' AS `Field` 
+    FROM LIB_CREATOR_TYPE lct
+    UNION ALL 
+    SELECT lpt.PublisherTypeID, lpt.Name, 'PublisherType' AS `Field` 
+    FROM LIB_PUBLISHER_TYPE lpt 
+    UNION ALL 
+    SELECT lp.PublisherID, lp.Name, 'Publisher' AS `Field` 
+    FROM LIB_PUBLISHER lp
+    UNION ALL 
+    SELECT lc.CreatorID, lc.Name, 'Creator' AS `Field` 
+    FROM LIB_CREATOR lc
     )
     SELECT 
-	`Field`,
-	CONCAT('[', 
-	GROUP_CONCAT(
-	DISTINCT CONCAT(
-	'{"id":', ID, 
-	',"name":"', Name, '"', 
-	(CASE WHEN description IS NOT NULL THEN ', "description": "' + description + '"' ELSE '' END)
-	,'}'
-	)
-	SEPARATOR ','), 
-	']') AS `Records`
+    `Field`
+    ,CONCAT('[', 
+    GROUP_CONCAT(
+    DISTINCT CONCAT(
+        '{"id":', ID, 
+        ',"name":"', Name, '"}'
+    )
+    SEPARATOR ','
+    ), 
+    ']') AS `Records`
     FROM VALS
     GROUP BY `Field`
     ORDER BY `Field`
 _END;
-
 $result = $conn->query($query);
 
-$result->data_seek(0);
-$creators = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
-$result->data_seek(1);
-$creatorTypes = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
-$result->data_seek(2);
-$genres = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
-$result->data_seek(3);
-$itemTypes = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
-$result->data_seek(4);
-$mediaTypes = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
-$result->data_seek(5);
-$publishers = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
-$result->data_seek(6);
-$publisherTypes = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records'], true));
+$selectItems = array(
+    'creators' => [], 
+    'creatorTypes' => [], 
+    'genres' => [], 
+    'itemTypes' => [], 
+    'mediaTypes' => [], 
+    'publishers' => [], 
+    'publisherTypes' => []
+);
+
+$index = 0;
+foreach($selectItems as &$item) {
+    $result->data_seek($index);
+    $item = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records']), true);
+    $index++;
+}
 
 $result->close();
 $conn->close();
@@ -102,7 +102,7 @@ $conn->close();
                             echo <<<_END
                                 <option selected disabled></option>
                             _END;
-                            foreach($itemTypes as $type) {
+                            foreach($selectItems['itemTypes'] as $type) {
                                 echo <<<_END
                                     <option value="$type[id]">$type[name]</option>
                                 _END;
@@ -124,7 +124,7 @@ $conn->close();
                             echo <<<_END
                                 <option selected disabled></option>
                             _END;
-                            foreach($mediaTypes as $type) {
+                            foreach($selectItems['mediaTypes'] as $type) {
                                 echo <<<_END
                                     <option value="$type[id]">$type[name]</option>
                                 _END;
@@ -146,7 +146,7 @@ $conn->close();
                             echo <<<_END
                                 <option selected disabled></option>
                             _END;
-                            foreach($genres as $genre) {
+                            foreach($selectItems['genres'] as $genre) {
                                 echo <<<_END
                                     <option value="$genre[id]">$genre[name]</option>
                                 _END;
@@ -186,7 +186,7 @@ $conn->close();
                                     echo <<<_END
                                         <option selected disabled></option>
                                     _END;
-                                    foreach($creators as $creator) {
+                                    foreach($selectItems['creators'] as $creator) {
                                         echo <<<_END
                                             <option value="$creator[id]">$creator[name]</option>
                                         _END;
@@ -210,7 +210,7 @@ $conn->close();
                                     echo <<<_END
                                         <option selected disabled></option>
                                     _END;
-                                    foreach($publishers as $publisher) {
+                                    foreach($selectItems['publishers'] as $publisher) {
                                         echo <<<_END
                                             <option value="$publisher[id]">$publisher[name]</option>
                                         _END;
@@ -294,7 +294,7 @@ $conn->close();
                             echo <<<_END
                                 <option selected disabled></option>
                             _END;
-                            foreach($creatorTypes as $type) {
+                            foreach($selectItems['creatorTypes'] as $type) {
                                 echo <<<_END
                                     <option value="$type[id]">$type[name]</option>
                                 _END;
@@ -348,7 +348,7 @@ $conn->close();
                                 echo <<<_END
                                     <option selected disabled></option>
                                 _END;
-                                foreach($publisherTypes as $type) {
+                                foreach($selectItems['publisherTypes'] as $type) {
                                     echo <<<_END
                                         <option value="$type[id]">$type[name]</option>
                                     _END;

@@ -9,7 +9,7 @@ $conn = connect();
 $itemId = prepSanitaryData($conn, $_GET['itemId']);
 
 $queryFramework = <<<_END
-    SELECT ImagePath FROM LIB_ITEM WHERE itemId = ?
+    SELECT Title, ImagePath FROM LIB_ITEM WHERE itemId = ?
 _END;
 $queryStmt = $conn->prepare($queryFramework);
 $queryStmt->bind_param("i", $itemId);

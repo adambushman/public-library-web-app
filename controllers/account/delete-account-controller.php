@@ -8,19 +8,19 @@ $conn = new mysqli($hn, $un, $pw, $db);
 if($conn->connect_error) die($conn->connect_error);
 
 
-if(isset($_POST['delete'])){
+if(isset($_POST)){
 	
-    $AccountID = $_POST['AccountID'];
+    $accountId = $_GET['accountId'];
 
-    $query = "DELETE FROM LIB_ACCOUNT WHERE AccountID = '$AccountID' ";
+    $query = "DELETE FROM LIB_ACCOUNT WHERE AccountID = '$accountId' ";
 
 	//Run the query
 	$result = $conn->query($query); 
-	if(!$result) die($conn->error);
+	if(!$result) {
+		echo $conn->error;
+		die();
+	}
 
 
-	header("Location: ../../views/pages/view-employees.php");
+	header("Location: ../../views/pages/application-settings.php");
 }
-
-
-?>
