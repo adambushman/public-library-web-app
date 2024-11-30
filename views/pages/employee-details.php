@@ -44,7 +44,7 @@ if (isset($_GET['AccountID'])) {
 
 
 			
-		<form action="../../controllers/Staff/update-employee.php" method="POST">
+		<form action="../../controllers/Staff/update-employee.php?accountId=<?php echo $accountId ?>" method="POST">
 				
             <div class="mb-3">
                 <label for="FirstName">First Name</label>

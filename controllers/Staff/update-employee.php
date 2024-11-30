@@ -2,10 +2,9 @@
 
 require_once '../../config/dbauth.php';
 
-$conn = new mysqli($hn, $un, $pw, $db);
-	if ($conn->connect_error){
-        die("Connection failed:".$conn->connect_error);
-    }
+$conn = connect();
+
+$AccountID = $_GET['accountId'];
 
 if ($_SERVER['REQUEST_METHOD'] = 'POST'){
 	$FirstName = $_POST['FirstName'];
@@ -19,11 +18,26 @@ if ($_SERVER['REQUEST_METHOD'] = 'POST'){
 	$StartDate = $_POST['StartDate'];
 	$AccountTypeID = $_POST['AccountTypeID'];
 	
-	
-	$stmt = $conn->prepare("UPDATE LIB_ACCOUNT SET FirstName = ?, LastName = ?, Phone = ?, Email = ?, Street = ?, City = ?, State = ?, Zip = ?, StartDate = ?, AccountTypeID = ? WHERE AccountID = ?");
-    $stmt->bind_param("ssisssssii", $firstName, $lastName, $Phone, $Email, $Street, $City, $State, $Zip, $AccountTypeID, $AccountID);
+	$queryFramework = <<<_END
+	UPDATE LIB_ACCOUNT 
+	SET 
+		FirstName = ?, 
+		LastName = ?, 
+		Phone = ?, 
+		Email = ?,
+		Street = ?, 
+		City = ?, 
+		State = ?, 
+		Zip = ?, 
+		StartDate = ?, 
+		AccountTypeID = ?
+	WHERE AccountID = ?
+	_END;
 
-	    if ($stmt->execute()) {
+	$queryStmt = $conn->prepare($queryFramework);
+    $queryStmt->bind_param("sssssssssii", $FirstName, $LastName, $Phone, $Email, $Street, $City, $State, $Zip, $StartDate, $AccountTypeID, $AccountID);
+
+	if ($queryStmt->execute()) {
         header("Location: ../../views/pages/view-employees.php?message=Employee updated successfully");
         exit();
     } else {

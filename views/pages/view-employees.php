@@ -61,7 +61,7 @@ for($j=0; $j<$rows; $j++){
 			echo "<td>".$row['AccountTypeID']."</td>";
             echo "<td class='text-end'>";
 			echo "<a href='employee-details.php?AccountID=".$row['AccountID']."'class='btn btn-sm btn-primary'>Details</a>";
-			echo "<form action='delete-employee.php' method='post'>";
+			echo "<form action='delete-employee.php?accountId=$row[AccountID]' method='post'>";
 			echo "<input type='hidden' name='delete' value='yes'>";
 			echo "<input type='hidden' name='AccountID' value='".$row['AccountID']."'>";
 			echo "<input type='submit' value='Delete'>";
