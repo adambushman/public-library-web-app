@@ -1,20 +1,41 @@
 <?php
 
+header('Content-Type: application/json');
 require_once '../../config/dbauth.php';
+require_once '../../helpers.php';
+
 $conn = connect();
 
-// Add the publisher
-$name = $_POST['name']; 
-$publisherType = $_POST['publisherType']; 
 
-$query = <<<_END
-    INSERT INTO LIB_PUBLISHER (Name, PublisherTypeID) VALUES
-    ('$name', $publisherType)
+// Clean the inputs
+// `prepSanitaryData()` comes from "helpers.php"
+$name = prepSanitaryData($conn, $_POST['name']); 
+$publisherType = prepSanitaryData($conn, $_POST['publisherType']); 
+
+
+// Validate the inputs
+
+
+
+// Add the "publisher"
+$queryFramework = <<<_END
+    INSERT INTO LIB_PUBLISHER (Name, PublisherTypeID)
+    VALUES (?, ?)
 _END;
 
-$result = $conn->query($query);
-if(!$result) echo $conn->error; //saveMsg("Could not add gift card; Error: $conn->error", 'failure', '../Views/Pages/card-add.php');
-$itemId = $conn->insert_id;
+$queryStmt = $conn->prepare($queryFramework);
 
-// Respond with the creator 'id' and 'name'
-echo "{\"id\": $itemId, \"name\": \"$name\"}";
+$queryStmt->bind_param(
+    "si", $name, $publisherType
+);
+
+$result = $queryStmt->execute();
+if(!$result) echo $conn->error; //saveMsg("Could not add gift card; Error: $conn->error", 'failure', '../Views/Pages/card-add.php');
+$publisherId = $conn->insert_id;
+
+// Respond with the publisher 'id' and 'name'
+echo json_encode(['id' => $publisherId, 'name' => htmlspecialchars($name)]);
+
+$queryStmt->close();
+$conn->close();
+exit();

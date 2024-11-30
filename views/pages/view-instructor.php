@@ -9,36 +9,38 @@
         <div class="row justify-content-center">
             <?php
                 require_once '../../config/dbauth.php';
-
-                $instructorId = $_GET['instructorId'];
+                require_once '../../helpers.php';
 
                 $conn = connect();
-                $query = <<<_END
-                SELECT 
-                li.*
-                ,CONCAT('[', 
-                    GROUP_CONCAT(
-                        DISTINCT CONCAT(
-                            '{"id":', lc.ClassID, 
-                            ',"title":"', REPLACE(lc.Title, '"', '\"'), 
-                            '","description":"', REPLACE(lc.Description, '"', '\"'), 
-                            '","image":"', REPLACE(lc.ImagePath, '"', '\"'), '"}'
-                        )
-                        SEPARATOR ','
-                    ), 
-                ']') AS `CLASSES`
+                $instructorId = prepSanitaryData($conn, $_GET['instructorId']);
 
-                FROM LIB_CLASS lc
-                INNER JOIN LIB_CLASS_INSTRUCTOR lic ON lic.ClassID = lc.ClassID
-                INNER JOIN LIB_INSTRUCTOR li ON li.InstructorID = lic.InstructorID
-                INNER JOIN LIB_CLASS_SCHEDULE lcs ON lcs.ClassID = lc.ClassID
+                $queryFramework = <<<_END
+                    SELECT 
+                    li.*
+                    ,CONCAT('[', 
+                        GROUP_CONCAT(
+                            DISTINCT CONCAT(
+                                '{"id":', lc.ClassID, 
+                                ',"title":"', REPLACE(lc.Title, '"', '\"'), 
+                                '","description":"', REPLACE(lc.Description, '"', '\"'), 
+                                '","image":"', REPLACE(lc.ImagePath, '"', '\"'), '"}'
+                            )
+                            SEPARATOR ','
+                        ), 
+                    ']') AS `CLASSES`
 
-                WHERE li.InstructorID = $instructorId
+                    FROM LIB_CLASS lc
+                    INNER JOIN LIB_CLASS_INSTRUCTOR lic ON lic.ClassID = lc.ClassID
+                    INNER JOIN LIB_INSTRUCTOR li ON li.InstructorID = lic.InstructorID
+                    INNER JOIN LIB_CLASS_SCHEDULE lcs ON lcs.ClassID = lc.ClassID
+
+                    WHERE li.InstructorID = ?
                 _END;
-
-                $result = $conn->query($query);
-                $rows = $result->num_rows;
-
+                $queryStmt = $conn->prepare($queryFramework);
+                $queryStmt->bind_param("i", $instructorId);
+                $queryStmt->execute();
+                
+                $result = $queryStmt->get_result();
                 $result->data_seek(0); 
                 $row = $result->fetch_array(MYSQLI_ASSOC);
 

@@ -1,32 +1,53 @@
 <?php
 
+header('Content-Type: application/json');
 require_once '../../config/dbauth.php';
+require_once '../../helpers.php';
+
 $conn = connect();
 
 // Handle image upload
 if($_FILES) {
-    $imgName = 'creator-img-' . $_FILES['imgUpload']['name'];
-    $imgPath = "ImageDirectory/$imgName";
+    $imgPath = createFullImgPath($_FILES['imgUpload']['name'], "creator_img_");
     move_uploaded_file($_FILES['imgUpload']['tmp_name'], "../../$imgPath");
 };
 
 
-// Add the creator
-$name = $_POST['name']; 
-$gender = $_POST['gender']; 
-$bio = $_POST['bio']; 
-$dateBorn = sprintf("%s", date("Y-m-d", strtotime($_POST['dateBorn'])));
-$dateDied = sprintf("%s", date("Y-m-d", strtotime($_POST['dateDied'])));
-$creatorType = $_POST['creatorType']; 
+// Clean the inputs
+// `prepSanitaryData()` comes from "helpers.php"
+$name = prepSanitaryData($conn, $_POST['name']); 
+$gender = prepSanitaryData($conn, $_POST['gender']); 
+$bio = prepSanitaryData($conn, $_POST['bio']); 
+$creatorType = prepSanitaryData($conn, $_POST['creatorType']); 
+$bdate = prepSanitaryData($conn, $_POST['dateBorn']);
+$ddate = prepSanitaryData($conn, $_POST['dateDied']);
+$dateBorn = sprintf("%s", date("Y-m-d", strtotime($bdate)));
+$dateDied = $ddate == '' ? null : sprintf("%s", date("Y-m-d", strtotime($ddate)));
 
-$query = <<<_END
-    INSERT INTO LIB_CREATOR (Name, Gender, DateBorn, DateDied, Bio, ImagePath, CreatorTypeID) VALUES
-    ('$name', '$gender', '$dateBorn', '$dateDied', '$bio', '$imgPath', $creatorType)
+
+// Validate the inputs
+
+
+// Add the "creator"
+$queryFramework = <<<_END
+    INSERT INTO LIB_CREATOR (Name, Gender, DateBorn, DateDied, Bio, ImagePath, CreatorTypeID) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)
 _END;
 
-$result = $conn->query($query);
+$queryStmt = $conn->prepare($queryFramework);
+
+$queryStmt->bind_param(
+    "ssssssi", $name, $gender, $dateBorn, $dateDied, $bio, $imgPath, $creatorType
+);
+
+$queryStmt->execute();
+$result = $queryStmt->get_result();
 if(!$result) echo $conn->error; //saveMsg("Could not add gift card; Error: $conn->error", 'failure', '../Views/Pages/card-add.php');
-$itemId = $conn->insert_id;
+$creatorId = $conn->insert_id;
 
 // Respond with the creator 'id' and 'name'
-echo "{\"id\": $itemId, \"name\": \"$name\"}";
+echo json_encode(['id' => $creatorId, 'name' => prepOutput($name)]);
+
+$queryStmt->close();
+$conn->close();
+exit();

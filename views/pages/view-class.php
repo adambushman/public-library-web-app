@@ -11,46 +11,48 @@
                 require_once '../../config/dbauth.php';
                 require_once '../../helpers.php';
 
-                $classId = $_GET['classId'];
-
                 $conn = connect();
-                $query = <<<_END
-                SELECT 
-                lc.*
-                ,CONCAT('[', 
-                    GROUP_CONCAT(
-                        DISTINCT CONCAT(
-                            '{"id":', li.InstructorID, 
-                            ',"name":"', REPLACE(li.Name, '"', '\"'), 
-                            '","bio":"', REPLACE(li.Bio, '"', '\"'), 
-                            '","image":"', REPLACE(li.ImagePath, '"', '\"'), '"}'
-                        )
-                        SEPARATOR ','
-                    ), 
-                ']') AS `INSTRUCTORS`
-                ,CONCAT('[', 
-                    GROUP_CONCAT(
-                        DISTINCT CONCAT('"', DATE_FORMAT(lcs.Date, '%W'), '"') 
-                        SEPARATOR ','
-                    ), 
-                ']') AS DAYS_OF_WEEK
-                ,CASE
-                WHEN TIME(lcs.Time) BETWEEN '05:00:00' AND '11:59:59' THEN 'Morning'
-                WHEN TIME(lcs.Time) BETWEEN '12:00:00' AND '16:59:59' THEN 'Afternoon'
-                WHEN TIME(lcs.Time) BETWEEN '17:00:00' AND '20:59:59' THEN 'Evening'
-                ELSE 'Night'
-                END AS TIME_OF_DAY
+                $classId = prepSanitaryData($conn, $_GET['classId']);
 
-                FROM LIB_CLASS lc
-                INNER JOIN LIB_CLASS_INSTRUCTOR lic ON lic.ClassID = lc.ClassID
-                INNER JOIN LIB_INSTRUCTOR li ON li.InstructorID = lic.InstructorID
-                INNER JOIN LIB_CLASS_SCHEDULE lcs ON lcs.ClassID = lc.ClassID
+                $queryFramework = <<<_END
+                    SELECT 
+                    lc.*
+                    ,CONCAT('[', 
+                        GROUP_CONCAT(
+                            DISTINCT CONCAT(
+                                '{"id":', li.InstructorID, 
+                                ',"name":"', REPLACE(li.Name, '"', '\"'), 
+                                '","bio":"', REPLACE(li.Bio, '"', '\"'), 
+                                '","image":"', REPLACE(li.ImagePath, '"', '\"'), '"}'
+                            )
+                            SEPARATOR ','
+                        ), 
+                    ']') AS `INSTRUCTORS`
+                    ,CONCAT('[', 
+                        GROUP_CONCAT(
+                            DISTINCT CONCAT('"', DATE_FORMAT(lcs.Date, '%W'), '"') 
+                            SEPARATOR ','
+                        ), 
+                    ']') AS DAYS_OF_WEEK
+                    ,CASE
+                    WHEN TIME(lcs.Time) BETWEEN '05:00:00' AND '11:59:59' THEN 'Morning'
+                    WHEN TIME(lcs.Time) BETWEEN '12:00:00' AND '16:59:59' THEN 'Afternoon'
+                    WHEN TIME(lcs.Time) BETWEEN '17:00:00' AND '20:59:59' THEN 'Evening'
+                    ELSE 'Night'
+                    END AS TIME_OF_DAY
 
-                WHERE lc.ClassID = $classId
+                    FROM LIB_CLASS lc
+                    INNER JOIN LIB_CLASS_INSTRUCTOR lic ON lic.ClassID = lc.ClassID
+                    INNER JOIN LIB_INSTRUCTOR li ON li.InstructorID = lic.InstructorID
+                    INNER JOIN LIB_CLASS_SCHEDULE lcs ON lcs.ClassID = lc.ClassID
+
+                    WHERE lc.ClassID = ?
                 _END;
+                $queryStmt = $conn->prepare($queryFramework);
+                $queryStmt->bind_param("i", $classId);
+                $queryStmt->execute();
 
-                $result = $conn->query($query);
-                $rows = $result->num_rows;
+                $result = $queryStmt->get_result();
 
                 $result->data_seek(0); 
                 $row = $result->fetch_array(MYSQLI_ASSOC);
@@ -124,19 +126,6 @@
                 ?>
             </div>
         </div>
-        <!--
-        <div class="row justify-content-center mt-1">
-            <div class="col-12 col-md-10 p-3">
-                <?php
-                    echo '<div class="card-group">';
-                    foreach(array_slice($item_meta, 5, 4) as $meta) {
-                        constructCard($meta);
-                    }
-                    echo '</div>';
-                ?>
-            </div>
-        </div>
-        -->
         <div class="row justify-content-center mt-3 mb-5">
             <?php
             echo <<<_END

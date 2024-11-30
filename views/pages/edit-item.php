@@ -6,10 +6,11 @@
 
 <?php
 require_once('../../config/dbauth.php');
-
-$itemId = $_GET['itemId'];
+require_once('../../helpers.php');
 
 $conn = connect();
+$itemId = prepSanitaryData($conn, $_GET['itemId']);
+
 $query = <<<_END
     WITH
     VALS AS (
@@ -45,18 +46,22 @@ $query = <<<_END
 _END;
 $result = $conn->query($query);
 
-$result->data_seek(0);
-$creators = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
-$result->data_seek(1);
-$genres = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
-$result->data_seek(2);
-$itemTypes = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
-$result->data_seek(3);
-$mediaTypes = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
-$result->data_seek(4);
-$publishers = json_decode($result->fetch_array(MYSQLI_ASSOC)['Records'], true);
+$selectItems = array(
+    'creators' => [], 
+    'genres' => [], 
+    'itemTypes' => [], 
+    'mediaTypes' => [], 
+    'publishers' => []
+);
 
-$query = <<<_END
+$index = 0;
+foreach($selectItems as &$item) {
+    $result->data_seek($index);
+    $item = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records']), true);
+    $index++;
+}
+
+$queryFramework = <<<_END
     WITH
     UNAVAIL AS (
     SELECT
@@ -82,13 +87,16 @@ $query = <<<_END
     INNER JOIN LIB_MEDIA_TYPE mt ON mt.MediaTypeID = li.MediaTypeID
     INNER JOIN LIB_GENRE g ON g.GenreID = li.GenreID
     LEFT JOIN UNAVAIL u ON u.ItemID = li.ItemID
-    WHERE li.ItemID = $itemId
+    WHERE li.ItemID = ?
     GROUP BY
     li.ItemID, li.Isbn, li.Title, li.Description, li.Year, li.IssueNumber, li.LibCopies, 
     li.LibCopies - COALESCE(Unavailable,0), li.LibLocation, li.ImagePath, it.Name, mt.Name, g.Name
 _END;
-$result = $conn->query($query);
+$queryStmt = $conn->prepare($queryFramework);
+$queryStmt->bind_param("i", $itemId);
+$queryStmt->execute();
 
+$result = $queryStmt->get_result();
 $result->data_seek(0);
 $row = $result->fetch_array(MYSQLI_ASSOC);
 
@@ -107,30 +115,31 @@ $conn->close();
                     <div class="col-md-6 col-lg-4 d-flex align-items-center mt-3 mt-md-0">
                         <h1 class="display-4">Edit library item</h1>
                     </div>
+                    <p class="mt-4 text-center"><i>* required inputs</i></p>
                 </div>
-                <form class="row justify-content-between g-3 mt-5" action="../../controllers/catalog/edit-item-controller.php?itemId=<?php echo $itemId ?>" method="post" enctype="multipart/form-data">
+                <form class="row justify-content-between g-3 mt-0" action="../../controllers/catalog/edit-item-controller.php?itemId=<?php echo $itemId ?>" method="post" enctype="multipart/form-data">
                     <div class="col-12 text-bg-secondary rounded px-2 py-1">
                         <h5 class="mb-0">Item Details</h5>
                     </div>
                     <div class="col-md-9">
-                        <label for="#title-in" class="col-form-label fw-bold">Title</label>
+                        <label for="#title-in" class="col-form-label fw-bold">*Title</label>
                         <input id="title-in" class="form-control" type="text" name="title" aria-label="Item title input" value="<?php echo $row['Title'] ?>" required>
                     </div>
                     <div class="col-md-3">
-                        <label for="#year" class="col-form-label fw-bold">Release Year</label>
+                        <label for="#year" class="col-form-label fw-bold">*Release Year</label>
                         <input id="year" class="form-control" type="number" name="year" aria-label="Release year input" min="1000" max="2025" value="<?php echo $row['Year'] ?>" required>
                     </div>
 
                     <div class="col-12">
-                        <label for="#description-in" class="col-form-label fw-bold">Description</label>
+                        <label for="#description-in" class="col-form-label fw-bold">*Description</label>
                         <textarea class="form-control" name="description" id="description-in" rows="4" required><?php echo $row['Description'] ?></textarea>
                     </div>
 
                     <div class="col-md-4">
-                        <label for="#item-type-in" class="col-form-label fw-bold">Item Type</label>
+                        <label for="#item-type-in" class="col-form-label fw-bold">*Item Type</label>
                         <select id="item-type-in" class="form-select" name="itemType" aria-label="Item type input" required>
                         <?php
-                        foreach($itemTypes as $type) {
+                        foreach($selectItems['itemTypes'] as $type) {
                             $selected = $type['id'] == $row['ItemTypeID'] ? 'selected' : '';
                             echo <<<_END
                                 <option value="$type[id]" $selected>$type[name]</option>
@@ -140,10 +149,10 @@ $conn->close();
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label for="#media-in" class="col-form-label fw-bold">Media Type</label>
+                        <label for="#media-in" class="col-form-label fw-bold">*Media Type</label>
                         <select id="media-in" class="form-select" name="mediaType" aria-label="Media type input" required>
                         <?php
-                        foreach($mediaTypes as $type) {
+                        foreach($selectItems['mediaTypes'] as $type) {
                             $selected = $type['id'] == $row['ItemTypeID'] ? 'selected' : '';
                             echo <<<_END
                                 <option value="$type[id]" $selected>$type[name]</option>
@@ -153,10 +162,10 @@ $conn->close();
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label for="#genre-in" class="col-form-label fw-bold">Genre</label>
+                        <label for="#genre-in" class="col-form-label fw-bold">*Genre</label>
                         <select id="genre-in" class="form-select" name="genre" aria-label="Genre input" required>
                         <?php
-                        foreach($genres as $genre) {
+                        foreach($selectItems['genres'] as $genre) {
                             $selected = $genre['id'] == $row['GenreID'] ? 'selected' : '';
                             echo <<<_END
                                 <option value="$genre[id]" $selected>$genre[name]</option>
@@ -167,7 +176,7 @@ $conn->close();
                     </div>
 
                     <div class="col-md-3">
-                        <label for="#copies" class="col-form-label fw-bold">Number of Copies</label>
+                        <label for="#copies" class="col-form-label fw-bold">*Number of Copies</label>
                         <input id="copies" class="form-control" type="number" name="copies" aria-label="Copies number input" min="1" max="10" value="<?php echo $row['LibCopies'] ?>" required>
                     </div>
                     <div class="col-md-3">
@@ -175,7 +184,7 @@ $conn->close();
                         <input id="issue" class="form-control" type="number" name="issue" aria-label="Issue number input" min="1" value="<?php echo $row['IssueNumber'] ?>">
                     </div>
                     <div class="col-md-6">
-                        <label for="#imgUpload" class="col-form-label fw-bold">Item Image</label>
+                        <label for="#imgUpload" class="col-form-label fw-bold">*Item Image</label>
                         <input class="form-control" type="file" name="imgUpload" id="imgUpload" aria-label="Card image upload">
                         <p class="text-danger"><i>Only select for upload of new image</i></p>
                     </div>
@@ -185,9 +194,9 @@ $conn->close();
                     </div>
                     <div class="col-md-5">
                         <div id="creator-input-fields" style="min-height: 10rem">
-                            <label for="#creator-in" class="col-form-label fw-bold">Creators</label>
+                            <label for="#creator-in" class="col-form-label fw-bold">*Creators</label>
                             <?php
-                            $creator_array = json_decode($row['Creators'], true);
+                            $creator_array = json_decode(stripslashes($row['Creators']), true);
                             for($i = 0; $i < count($creator_array); $i++) {
                                 $index = $i + 1;
                                 echo <<<_END
@@ -195,7 +204,7 @@ $conn->close();
                                 <select id="creator-in" class="form-select form-select-sm" name="creator$index" aria-label="Creator input" required>
                                 _END;
 
-                                foreach($creators as $creator) {
+                                foreach($selectItems['creators'] as $creator) {
                                     $selected = $creator['id'] == $creator_array[$i] ? 'selected' : '';
                                     echo <<<_END
                                         <option value="$creator[id]" $selected>$creator[name]</option>
@@ -220,9 +229,9 @@ $conn->close();
                     </div>
                     <div class="col-md-5">
                         <div id="publisher-input-fields" style="min-height: 10rem">
-                            <label for="#publisher-in" class="col-form-label fw-bold">Publishers</label>
+                            <label for="#publisher-in" class="col-form-label fw-bold">*Publishers</label>
                             <?php
-                            $publisher_array = json_decode($row['Publishers'], true);
+                            $publisher_array = json_decode(stripslashes($row['Publishers']), true);
                             for($i = 0; $i < count($publisher_array); $i++) {
                                 $index = $i + 1;
                                 echo <<<_END
@@ -230,7 +239,7 @@ $conn->close();
                                 <select id="publisher-in" class="form-select form-select-sm" name="publisher$index" aria-label="Publisher input" required>
                                 _END;
 
-                                foreach($publishers as $publisher) {
+                                foreach($selectItems['publishers'] as $publisher) {
                                     $selected = $publisher['id'] == $publisher_array[$i] ? 'selected' : '';
                                     echo <<<_END
                                         <option value="$publisher[id]" $selected>$publisher[name]</option>
@@ -258,16 +267,17 @@ $conn->close();
                         <h5 class="mb-0">Library Details</h5>
                     </div>
                     <div class="col-md-4">
-                        <label for="#isbn" class="col-form-label fw-bold">ISBN-13 Code</label>
+                        <label for="#isbn" class="col-form-label fw-bold">*ISBN-13 Code</label>
                         <input id="isbn" class="form-control" type="text" name="isbn" aria-label="ISBN 13 code input" value="<?php echo $row['Isbn'] ?>" required>
                     </div>
                     <div class="col-md-4">
-                        <label for="#location" class="col-form-label fw-bold">Location Code</label>
+                        <label for="#location" class="col-form-label fw-bold">*Location Code</label>
                         <input id="location" class="form-control" type="text" name="location" aria-label="Location input"value="<?php echo $row['LibLocation'] ?>" required>
                     </div>
 
-                    <div class="my-5 d-grid">
+                    <div class="my-5 d-grid gap-2">
                         <button type="submit" class="btn btn-success">Save Item</button>
+                        <a href="view-item.php?itemId=<?php echo $itemId ?>" class="btn btn-light">Cancel</a>
                     </div>
                 </form>
             </div>

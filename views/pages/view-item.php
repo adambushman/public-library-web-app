@@ -73,8 +73,8 @@
                 $row = $result->fetch_array(MYSQLI_ASSOC);
 
                 $itemImg = ($row['ItemImg'] ?? 'ImageDirectory/default-image.jpg');
-                $creators = json_decode($row['Creators'], true);
-                $publishers = json_decode($row['Publishers'], true);
+                $creators = json_decode(stripslashes($row['Creators']), true);
+                $publishers = json_decode(stripslashes($row['Publishers']), true);
                 $creator_names = implode(', ', array_map(fn($x) => "$x[name]",  $creators));
                 $publisher_names = implode(array_map(fn($x) => "$x[name]",  $publishers));
                 $creator_type = $creators[0]['type'];
