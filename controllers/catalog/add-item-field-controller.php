@@ -37,7 +37,7 @@ $fieldId = $conn->insert_id;
 
 echo json_encode([
     'id' => $fieldId, 
-    'name' => prepOutput($name), 
+    'name' => htmlspecialchars($name), 
     'input_field' => $inputField, 
     'reopen' => $reopen
 ]);

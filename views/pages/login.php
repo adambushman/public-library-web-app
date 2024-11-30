@@ -15,12 +15,12 @@
 							<h2>Login to Your Account</h2>
                             <form action="../../controllers/authentication/login-controller.php" method="POST" class="w-md-75 justify-content-center">
                                 <div class="my-3">
-                                    <label for="emailInput" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@example.com">
+                                    <label for="usernameInput" class="form-label">Username</label>
+                                    <input type="username" class="form-control" id="usernameInput" name="username">
                                 </div>
                                 <div>
                                     <label for="passwordInput" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="passwordInput" name="password" placeholder="************">
+                                    <input type="password" class="form-control" id="passwordInput" name="password">
                                 </div>
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-dark my-3">Login</button>

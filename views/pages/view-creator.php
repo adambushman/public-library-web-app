@@ -48,8 +48,6 @@
                     $row['DateBorn'] != NULL ? sprintf("%s", date("F j, Y", strtotime($row['DateBorn']))) : '', 
                     $row['DateDied'] != NULL ? sprintf("%s", date("F j, Y", strtotime($row['DateDied']))) : ''
                 );
-                var_dump($row['DateDied']);
-                die();
 
                 echo <<<_END
                     <div class="col-8 col-md-4 col-xl-2">
