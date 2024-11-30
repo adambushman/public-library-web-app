@@ -22,7 +22,8 @@ function toggleInclude(type, enabled) {
 function removeParent(el) {
     const label = el.parentNode.parentNode.children[0];
     const typeRaw = label.textContent.toLowerCase();
-    const type = typeRaw.substring(0, typeRaw.length - 1)
+    const type = typeRaw.substring(1, typeRaw.length - 1);
+    console.log(type);
     toggleInclude(type, true);
 
     el.parentNode.remove();
@@ -39,6 +40,7 @@ function includeAnother(type) {
     const newSelect = document.createElement("select");
     newSelect.id = `${type}${numSelect + 1}-in`;
     ['form-select', 'form-select-sm'].forEach(d => newSelect.classList.toggle(d));
+    newSelect.required = true;
     newSelect.name = `${type}${numSelect + 1}`;
     newSelect.ariaLabel = `${type} input`;
     newSelect.addEventListener("change", e => toggleInclude(type, true));

@@ -11,18 +11,19 @@
                 require_once '../../config/dbauth.php';
                 require_once '../../helpers.php';
 
-                $eventId = $_GET['eventId'];
-
                 $conn = connect();
-                $query = <<<_END
-                SELECT * 
-                FROM LIB_EVENT le
-                WHERE le.EventID = $eventId
+                $eventId = prepSanitaryData($conn, $_GET['eventId']);
+
+                $queryFramework = <<<_END
+                    SELECT * 
+                    FROM LIB_EVENT le
+                    WHERE le.EventID = ?
                 _END;
+                $queryStmt = $conn->prepare($queryFramework);
+                $queryStmt->bind_param("i", $eventId);
+                $queryStmt->execute();
 
-                $result = $conn->query($query);
-                $rows = $result->num_rows;
-
+                $result = $queryStmt->get_result();
                 $result->data_seek(0); 
                 $row = $result->fetch_array(MYSQLI_ASSOC);
 
