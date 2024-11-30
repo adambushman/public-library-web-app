@@ -4,10 +4,16 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
-<!-- Authorization Code -->
+<!-- Auth Code -->
 <?php
 require_once '../../config/dbauth.php';
 require_once '../../helpers.php';
+
+// Redirect to login if user is logged in
+if(!isset($_SESSION['accountId'])) {
+    header('Location: login.php');
+	exit();
+}
 
 $conn = connect();
 
