@@ -1,8 +1,16 @@
 <?php
 
+require_once '../../config/dbauth.php';
+require_once '../../helpers.php';
+
+$conn = connect();
+
 session_start();
 
-$authenticated = isset($_SESSION['email']);
+$authenticated = isset($_SESSION['accountId']);
+$roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
+
+$conn->close();
 
 $authPath = $authenticated ? "../../controllers/authentication/logout-controller.php" : "login.php";
 $authLang = $authenticated ? "Logout" : "Login";
@@ -33,14 +41,19 @@ echo <<<_END
 						</li>
 _END;
 if($authenticated) {
-echo <<<_END
+	if(array_intersect($roles, array("Admin", "Staff"))) {
+		echo <<<_END
 						<li class="nav-item">
 							<a class="nav-link" href="view-employees.php">Staff</a>
 						</li>
+		_END;
+	}
+
+	echo <<<_END
 						<li class="nav-item">
-							<a class="nav-link" href="temp-view-account.php">Account</a>
+							<a class="nav-link" href="view-account.php">Account</a>
 						</li>
-_END;
+	_END;
 }
 echo <<<_END
 
