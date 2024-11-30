@@ -8,9 +8,9 @@
     <div class="container-fluid">
         <div class="row justify-content-between mx-5">
             <aside class="col-lg-3 pe-5">
-                <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="offcanvasResponsive" aria-labelledby="offcanvasResponsiveLabel">
+                <div class="offcanvas-lg offcanvas-end" tabindex="-1" id="offcanvasResponsive" aria-labelledby="offcanvasResponsiveLabel">
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasResponsiveLabel">Filter Classes</h5>
+                        <h5 class="offcanvas-title" id="offcanvasResponsiveLabel">Filter Events</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasResponsive" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
