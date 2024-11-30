@@ -28,7 +28,7 @@ function getAccountRoles($conn, $accountId) {
         SELECT lat.Name AS `Role`
         FROM LIB_ACCOUNT la
         INNER JOIN LIB_ACCOUNT_TYPE lat ON lat.AccountTypeID = la.AccountTypeID
-        WHERE la.AccountID = 1
+        WHERE la.AccountID = ?
     _END;
 
     $queryStmt = $conn->prepare($queryFramework);
@@ -43,4 +43,10 @@ function getAccountRoles($conn, $accountId) {
     $queryStmt->close();
 
     return $accountRoles;
+}
+
+function preventMembers($roles) {
+    if(count(array_intersect($roles, array("Admin", "Staff"))) == 0) {
+        header('Location: 401.php');
+    }
 }

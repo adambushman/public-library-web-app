@@ -4,6 +4,17 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+<!-- Authorization Code -->
+<?php
+require_once '../../config/dbauth.php';
+require_once '../../helpers.php';
+
+$conn = connect();
+
+$roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
+preventMembers($roles); // Redirect if "Member"
+?>
+
 <!-- FORM -->
 <div class="container mt-5">
 	<div class="row justify-content-center">

@@ -11,7 +11,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 	
 	//get password from DB w/ SQL
 	$queryFramework = <<<_END
-		SELECT AccountID, Password FROM LIB_ACCOUNT WHERE Email = ?
+		SELECT AccountID, Password FROM LIB_ACCOUNT WHERE Username = ?
 	_END;
 	$queryStmt = $conn->prepare($queryFramework);
 	$queryStmt->bind_param('s', $tmp_username);
@@ -36,7 +36,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 	$queryStmt->close();
 	
 	//Compare passwords
-	if(password_verify($tmp_password, $passwordFromDB)) {
+	if(password_verify($tmp_password, $dbValues['password'])) {
         // Start session and redirect to home.php
         session_start();
         $_SESSION['accountId'] = $dbValues['accountId'];

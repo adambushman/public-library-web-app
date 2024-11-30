@@ -4,6 +4,12 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+<?php
+if(isset($_SESSION['accountId'])) {
+    header('Location: home.php');
+}
+?>
+
 
 <main id="login" class="my-auto">
         <div class="container container-fluid d-flex flex-column align-items-evenly">

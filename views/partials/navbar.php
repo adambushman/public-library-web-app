@@ -51,7 +51,7 @@ if($authenticated) {
 
 	echo <<<_END
 						<li class="nav-item">
-							<a class="nav-link" href="temp-view-account.php">Account</a>
+							<a class="nav-link" href="view-account.php">Account</a>
 						</li>
 	_END;
 }

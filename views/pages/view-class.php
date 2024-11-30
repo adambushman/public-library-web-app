@@ -12,6 +12,8 @@
                 require_once '../../helpers.php';
 
                 $conn = connect();
+                $roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
+                
                 $classId = prepSanitaryData($conn, $_GET['classId']);
 
                 $queryFramework = <<<_END
@@ -98,6 +100,9 @@
                                     Register
                                 </a>
                             </div>
+                _END;
+                if(count(array_intersect($roles, array("Admin", "Staff")))) {
+                    echo <<<_END
                             <div class="col-6">
                                 <a class="btn btn-sm btn-warning d-inline-flex justify-content-center align-items-center w-100" href="#" disabled>
                                     <i class="bi bi-pencil pe-2"></i>    
@@ -110,6 +115,9 @@
                                     Remove
                                 </a>
                             </div>
+                    _END;
+                }
+                echo <<<_END
                         </div>
                     </div>
                 _END;

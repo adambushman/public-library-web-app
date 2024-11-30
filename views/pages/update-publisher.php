@@ -4,10 +4,18 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+<!-- Authorization Code -->
 <?php
 require_once '../../config/dbauth.php';
-$conn = new mysqli($hn, $un, $pw, $db);
-if ($conn->connect_error) die($conn->connect_error);
+require_once '../../helpers.php';
+
+$conn = connect();
+
+$roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
+preventMembers($roles); // Redirect if "Member"
+?>
+
+<?php
 
 // Get all publisher names from db
 $query = "SELECT Name, PublisherID FROM lib_publisher";
