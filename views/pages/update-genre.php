@@ -4,11 +4,24 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+<!-- Auth Code -->
 <?php
 require_once '../../config/dbauth.php';
-$conn = new mysqli($hn, $un, $pw, $db);
-if ($conn->connect_error) die($conn->connect_error);
+require_once '../../helpers.php';
 
+// Redirect to login if user is logged in
+if(!isset($_SESSION['accountId'])) {
+    header('Location: login.php');
+	exit();
+}
+
+$conn = connect();
+
+$roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
+preventMembers($roles); // Redirect if "Member"
+?>
+
+<?php
 // Get all genre names from db
 $query = "SELECT Name, GenreID FROM lib_genre";
 $result = $conn->query($query);

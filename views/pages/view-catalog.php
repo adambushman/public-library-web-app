@@ -4,6 +4,14 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+<?php
+require_once '../../config/dbauth.php';
+require_once '../../helpers.php';
+
+$conn = connect();
+$roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
+?>
+
 <main class="my-5">
     <div class="container-fluid">
         <div class="row justify-content-between mx-5">
@@ -31,15 +39,18 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h2>Library Catalog</h2>
                     <div>
-                        <a class="btn btn-sm btn-info" href="add-item.php">
-                            <i class="bi bi-plus-square pe-2"></i>Add Item
-                        </a>
-                        <a class="btn btn-sm btn-info" href="update-item.php">
-                            <i class="bi bi-check-square pe-2"></i>Update Item
-                        </a>	
-
-                        </a>							
-						
+                        <?php
+                        if(count(array_intersect($roles, array("Admin", "Staff")))) {
+                            echo <<<_END
+                            <a class="btn btn-sm btn-info" href="add-item.php">
+                                <i class="bi bi-plus-square pe-2"></i>Add Item
+                            </a>
+                            <a class="btn btn-sm btn-info" href="update-item.php">
+                                <i class="bi bi-check-square pe-2"></i>Update Item
+                            </a>
+                            _END;
+                        }
+                        ?>			
                         <button class="btn btn-sm btn-secondary d-lg-none d-inline-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">
                             <i class="bi bi-funnel pe-2"></i>Filter Catalog
                         </button>
@@ -48,9 +59,6 @@
                 <hr>
                 <div class="row row-cols-1 row-cols-md-3 row-cols-xl-5 g-2">
                     <?php
-                    require_once '../../config/dbauth.php';
-
-                    $conn = connect();
                     $query = <<<_END
                         SELECT 
                         li.ItemID, li.Title, li.Description, GROUP_CONCAT(lc.Name SEPARATOR ', ') AS Names, li.Year, li.ImagePath

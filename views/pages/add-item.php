@@ -4,10 +4,23 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+<!-- Auth Code -->
 <?php
-require_once('../../config/dbauth.php');
+require_once '../../config/dbauth.php';
+require_once '../../helpers.php';
+
+// Redirect to login if user is logged in
+if(!isset($_SESSION['accountId'])) {
+    header('Location: login.php');
+	exit();
+}
 
 $conn = connect();
+
+$roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
+preventMembers($roles); // Redirect if "Member"
+
+
 $query = <<<_END
     WITH
     VALS AS (

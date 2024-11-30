@@ -25,36 +25,7 @@
 
 <section class="my-5">
   <div class="container">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-      <div class="col">
-        <div class="card text-center border-primary">
-          <div class="card-body text-primary">
-            <h1><i class="bi bi-collection-fill"></i></h1>
-            <h3 class="mb-3">Comprehensive Catalog</h3>
-            <p class="text-black mb-0">Explore our comprehensive catalog of books, music, movies, and more—something for every interest and age. Discover your next favorite!</p>
-            <a href="view-catalog.php" class="stretched-link"></a>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card text-center border-success">
-          <div class="card-body text-success">
-            <h1><i class="bi bi-easel3-fill"></i></h1>
-            <h3 class="mb-3">Engaging Classes</h3>
-            <p class="text-black mb-0">Join our engaging classes in art, writing, and more! Learn new skills, express creativity, and connect with others</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card text-center border-danger">
-          <div class="card-body text-danger">
-            <h1><i class="bi bi-calendar-event-fill"></i></h1>
-            <h3 class="mb-3">Exciting Events</h3>
-            <p class="text-black mb-0">Don't miss our exciting events, including book fairs, author signings, and more! Join us for fun and inspiration at the library!</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <?php include_once '../partials/library-resources-div.php'; ?>
   </div>
 </section>
 
@@ -88,6 +59,9 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
+        </div>
+        <div class="d-grid mt-2">
+          <a href="view-schedule.php" class="btn btn-secondary rounded-0">Explore full schedule of events and classes!</a>
         </div>
       </div>
     </div>

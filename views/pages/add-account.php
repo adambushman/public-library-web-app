@@ -4,6 +4,13 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+<?php
+// Redirect to account if user is logged in
+if(isset($_SESSION['accountId'])) {
+    header('Location: view-account.php');
+}
+?>
+
 
 <div class="main">
     <div class="container mt-5">

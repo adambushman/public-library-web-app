@@ -22,3 +22,31 @@ function createFullImgPath($uploadedFileName, $prefix) {
     $imgPath = "ImageDirectory/$newImgName";
     return $imgPath;
 }
+
+function getAccountRoles($conn, $accountId) {
+    $queryFramework = <<<_END
+        SELECT lat.Name AS `Role`
+        FROM LIB_ACCOUNT la
+        INNER JOIN LIB_ACCOUNT_TYPE lat ON lat.AccountTypeID = la.AccountTypeID
+        WHERE la.AccountID = ?
+    _END;
+
+    $queryStmt = $conn->prepare($queryFramework);
+    $queryStmt->bind_param('i', $accountId);
+    
+    $queryStmt->execute();
+    $result = $queryStmt->get_result();
+    if(!$result) echo $conn->error;
+
+    $result->data_seek(0);
+    $accountRoles = array($result->fetch_array(MYSQLI_ASSOC)['Role']);
+    $queryStmt->close();
+
+    return $accountRoles;
+}
+
+function preventMembers($roles) {
+    if(count(array_intersect($roles, array("Admin", "Staff"))) == 0) {
+        header('Location: 401.php');
+    }
+}

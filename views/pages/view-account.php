@@ -10,12 +10,12 @@
 require_once '../../config/dbauth.php';
 require_once '../../helpers.php';
 
-if(!isset($_SESSION['email'])) {
+if(!isset($_SESSION['accountId'])) {
     header('Location: login.php');
 }
 
 $conn = connect();
-$userEmail = $_SESSION['email'];
+$accountId = $_SESSION['accountId'];
 
 $queryFramework = <<<_END
 SELECT 
@@ -73,57 +73,13 @@ SELECT
 FROM LIB_ACCOUNT la
 INNER JOIN LIB_ACCOUNT_TYPE lat ON lat.AccountTypeID = la.AccountTypeID
 LEFT JOIN LIB_CHECKOUT lc ON lc.AccountID = la.AccountID
-WHERE la.Email = ?
+WHERE la.AccountID = ?
 GROUP BY la.AccountID
 _END;
-/*
-$queryFramework = <<<_END
-
-SELECT 
-la.*,
-lat.Name AS `AccountType`,
-CONCAT(
-    '{"CheckoutHistory": [', 
-    GROUP_CONCAT(
-        CONCAT(
-            '{"CheckoutID": ', lc.CheckoutID, 
-            ', "CheckoutDate": "', lc.CheckoutDate, '"',
-            ', "DueDate": "', lc.DueDate, '"',
-            ', "ReturnDate": "', IFNULL(lc.ReturnDate, 'null'), '"',
-            ', "Items": [',
-                IFNULL(
-                    (
-                        SELECT 
-                            GROUP_CONCAT(
-                                CONCAT(
-                                    '{"id": ', li.ItemID, 
-                                    ', "title": "', li.Title, '"',
-                                    ', "img": "', IFNULL(li.ImagePath, ''), '"}'
-                                ) 
-                                SEPARATOR ','
-                            )
-                        FROM LIB_CHECKOUT_ITEM lci
-                        INNER JOIN LIB_ITEM li ON li.ItemID = lci.ItemID
-                        WHERE lci.CheckoutID = lc.CheckoutID
-                    ),
-                    ''
-                ),
-            ']}' 
-        )
-    ),
-    ']}'
-) AS `CheckoutHistory`
-FROM LIB_ACCOUNT la
-INNER JOIN LIB_ACCOUNT_TYPE lat ON lat.AccountTypeID = la.AccountTypeID
-LEFT JOIN LIB_CHECKOUT lc ON lc.AccountID = la.AccountID
-WHERE la.Email = ?
-GROUP BY la.AccountID
-_END;
-*/
 
 $queryStmt = $conn->prepare($queryFramework);
 $queryStmt->bind_param(
-    "s", $userEmail
+    "s", $accountId
 );
 
 $queryStmt->execute();
@@ -276,11 +232,13 @@ $data = array(
                                         _END;
                                         
                                         foreach($itemsArray as $item) {
-                                            $returnDate = $item['ReturnDate'] == 'null' ? '' : $item['ReturnDate'];
+                                            $checkoutFormatted = formatDate($item['CheckoutDate']);
+                                            $dueFormatted = formatDate($item['DueDate']);
+                                            $returnDate = $item['ReturnDate'] == 'null' ? '' : formatDate($item['ReturnDate']);
                                             echo <<<_END
                                             <tr>
-                                                <td>$item[CheckoutDate]</td>
-                                                <td>$item[DueDate]</td>
+                                                <td>$checkoutFormatted</td>
+                                                <td>$dueFormatted</td>
                                                 <td>$returnDate</td>
                                                 <td><div class='d-flex gap-2'>
                                             _END;
@@ -334,9 +292,10 @@ $data = array(
                                         
                                         foreach($itemsArray as $item) {
                                             $returnDate = $item['ReturnDate'] == 'null' ? '' : $item['ReturnDate'];
+                                            $checkoutFormatted = formatDate($item['CheckoutDate']);
                                             echo <<<_END
                                             <tr>
-                                                <td>$item[CheckoutDate]</td>
+                                                <td>$checkoutFormatted</td>
                                                 <td><div class='d-flex gap-2'>
                                             _END;
 

@@ -46,7 +46,7 @@ if(!$result) echo $conn->error; //saveMsg("Could not add gift card; Error: $conn
 $creatorId = $conn->insert_id;
 
 // Respond with the creator 'id' and 'name'
-echo json_encode(['id' => $creatorId, 'name' => prepOutput($name)]);
+echo json_encode(['id' => $creatorId, 'name' => htmlspecialchars($name)]);
 
 $queryStmt->close();
 $conn->close();
