@@ -38,19 +38,7 @@ $roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accou
             <section class="col-12 col-lg-9">
                 <div class="d-flex justify-content-between align-items-center">
                     <h2>Library Catalog</h2>
-                    <div>
-                        <?php
-                        if(count(array_intersect($roles, array("Admin", "Staff")))) {
-                            echo <<<_END
-                            <a class="btn btn-sm btn-info" href="add-item.php">
-                                <i class="bi bi-plus-square pe-2"></i>Add Item
-                            </a>
-                            <a class="btn btn-sm btn-info" href="update-item.php">
-                                <i class="bi bi-check-square pe-2"></i>Update Item
-                            </a>
-                            _END;
-                        }
-                        ?>			
+                    <div>	
                         <button class="btn btn-sm btn-secondary d-lg-none d-inline-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">
                             <i class="bi bi-funnel pe-2"></i>Filter Catalog
                         </button>

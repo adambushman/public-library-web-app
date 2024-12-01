@@ -50,3 +50,12 @@ function preventMembers($roles) {
         header('Location: 401.php');
     }
 }
+
+function transformTableName($input) {
+    // Remove the "LIB_" prefix
+    $stripped = preg_replace('/^LIB_/', '', $input);
+    // Convert to CamelCase
+    $camelCase = str_replace(' ', '', ucwords(strtolower(str_replace('_', ' ', $stripped))));
+    // Append "ID" at the end
+    return $camelCase . 'ID';
+}

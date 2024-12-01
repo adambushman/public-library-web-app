@@ -24,8 +24,7 @@ preventMembers($roles); // Redirect if "Member"
 $itemId = prepSanitaryData($conn, $_GET['itemId']);
 
 $query = <<<_END
-    WITH
-    VALS AS (
+	WITH VALS AS (
     SELECT ItemTypeID AS ID, Name, 'ItemType' AS `Field` 
     FROM LIB_ITEM_TYPE 
     UNION ALL 
@@ -35,11 +34,11 @@ $query = <<<_END
     SELECT *, 'Genre' AS `Field` 
     FROM LIB_GENRE 
     UNION ALL 
-    SELECT lc.CreatorID, lc.Name, 'Creator' AS `Field` 
-    FROM LIB_CREATOR lc 
-    UNION ALL 
     SELECT lp.PublisherID, lp.Name, 'Publisher' AS `Field` 
-    FROM LIB_PUBLISHER lp 
+    FROM LIB_PUBLISHER lp
+    UNION ALL 
+    SELECT lc.CreatorID, lc.Name, 'Creator' AS `Field` 
+    FROM LIB_CREATOR lc
     )
     SELECT 
     `Field`

@@ -35,9 +35,13 @@ document.getElementById("creator-form").addEventListener("submit", function(even
                 populated = true;
             }
         });
+
+        toggleInclude("creator", true);
         
         // Close modal
         $('#creatorModal').modal('hide');
+        
+        document.getElementById("creator-form").reset();
     })
     .catch(error => {
         console.error("Error:", error);
@@ -77,8 +81,12 @@ document.getElementById("publisher-form").addEventListener("submit", function(ev
             }
         });
         
+        toggleInclude("publisher", true);
+
         // Close modal
         $('#publisherModal').modal('hide');
+
+        document.getElementById("publisher-form").reset();
     })
     .catch(error => {
         console.error("Error:", error);
