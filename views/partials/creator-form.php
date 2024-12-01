@@ -3,7 +3,8 @@
 function renderCreatorForm($creatorTypes, $echoBack = true, $valuesArray = null) {
     $lang = is_null($valuesArray) ? "Add" : "Edit";
     $langLower = strtolower($lang);
-    $actionVal = !$echoBack ? "../../controllers/catalog/$langLower-creator-controller.php?echo=$echoBack&creatorId=$valuesArray[CreatorID]" : '';
+    $creatorString = is_null($valuesArray) ? '' : "&creatorId=$valuesArray[CreatorID]";
+    $actionVal = !$echoBack ? "../../controllers/catalog/$langLower-creator-controller.php?echo=$echoBack" . $creatorString : '';
     $methodVal = !$echoBack ? 'POST' : '';
 
     $name = $valuesArray['Name'] ?? '';
@@ -51,7 +52,7 @@ function renderCreatorForm($creatorTypes, $echoBack = true, $valuesArray = null)
                     <select id="creator-type-in" class="form-select" name="creatorType" aria-label="Creator type input" required>
         _END;
                     if(is_null($valuesArray)) {
-                        echo "<option selected disabled></option";
+                        echo "<option selected disabled></option>";
                     }
                     foreach($creatorTypes as $type) {
                         $selected = $type['id'] == $creatorTypeId ? 'selected' : '';
@@ -71,7 +72,11 @@ function renderCreatorForm($creatorTypes, $echoBack = true, $valuesArray = null)
             <div class="col-md-6">
                 <label for="#imgUpload" class="col-form-label fw-bold">*Creator Image</label>
                 <input class="form-control" type="file" name="imgUpload" id="imgUpload" aria-label="Creator image upload" required>
-                <p class="text-danger"><i>Only select for upload of new image</i></p>
+    _END;
+    if(!is_null($valuesArray)) {
+        echo '<p class="text-danger"><i>Only select for upload of new image</i></p>';
+    }
+    echo <<<_END
             </div>
             
             <div class="col-6 mt-5">

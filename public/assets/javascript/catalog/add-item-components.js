@@ -138,6 +138,7 @@ document.getElementById("new-item-form").addEventListener("submit", function(eve
 
         // Open previous modal
         if(new_value.reopen == 'true') {
+            console.log(new_value.name);
             if(new_value.name.includes('publisher')) {
                 $("#publisherModal").modal('show');
             } else {
