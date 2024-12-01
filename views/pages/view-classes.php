@@ -16,7 +16,13 @@
                     <div class="offcanvas-body">
                         <div class="input-group flex-nowrap">
                             <span class="input-group-text" id="addon-wrapping"><i class="bi bi-search"></i></span>
-                            <input disabled type="text" name="search" class="form-control" aria-label="Search" aria-describedby="addon-wrapping">
+                            <input id="searchBar" type="text" name="search" class="form-control" aria-label="Search" aria-describedby="addon-wrapping"
+                            value="<?php 
+                                if(isset($_GET['searchTerm'])) {
+                                    echo $_GET['searchTerm'];
+                                }
+                            ?>"
+                            >
                         </div>
                     </div>
                 </div>
@@ -25,9 +31,6 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h2>Class Catalog</h2>
                     <div>
-                        <a class="btn btn-sm btn-info" href="#" disabled>
-                            <i class="bi bi-plus-square pe-2"></i>Add Class
-                        </a>
                         <button class="btn btn-sm btn-secondary d-lg-none d-inline-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">
                             <i class="bi bi-funnel pe-2"></i>Filter Claasses
                         </button>
@@ -53,7 +56,7 @@
                         $img = ($row['ImagePath'] ?? 'ImageDirectory/default-image.jpg');
 
                         echo <<<_END
-                        <div class="col">
+                        <div class="col catalog-item">
                             <div class="card border-0">
                                 <img src="../../$img" class="card-img-top class-item-img mb-3" alt="...">
                                 <div class="card-body border rounded" style="height:13rem">
@@ -71,6 +74,8 @@
         </div>
     </div>
 </main>
+
+<script src="../../public/assets/javascript/catalog/catalog-search.js"></script>
 
 <!-- Footer -->
 <?php include_once '../partials/footer.php'; ?>

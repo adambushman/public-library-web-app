@@ -5,6 +5,8 @@ function renderFieldForm($controller = null, $method = null, $table = null, $val
     $methodVal = $method ?? '';
     if(!is_null($lang)) {
         echo "<h3>$lang value to '$table'</h3>";
+    } else {
+        $lang = "Add";
     }
     echo <<<_END
         <form id="new-item-form" action="$controllerVal" method="$methodVal" class="row g-3">

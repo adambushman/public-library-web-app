@@ -145,6 +145,9 @@ $data = array(
                         <div class="d-flex justify-content-between align-items-center">
                             <h2><i class="bi bi-person-circle pe-2"></i>Profile</h2>
                             <div>
+                                <a href="edit-account.php?accountId=<?php echo $accountId ?>" class="btn btn-info">
+                                    <i class="bi bi-pencil pe-2"></i>Edit Account
+                                </a>
                                 <button class="btn btn-sm btn-secondary d-lg-none d-inline-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">
                                     <i class="bi bi-list"></i>
                                 </button>
@@ -182,6 +185,9 @@ $data = array(
                         <div class="d-flex justify-content-between align-items-center">
                             <h2><i class="bi bi-shield-check pe-2"></i>Security</h2>
                             <div>
+                                <a href="edit-account.php?accountId=<?php echo $accountId ?>" class="btn btn-info">
+                                    <i class="bi bi-pencil pe-2"></i>Edit Account
+                                </a>
                                 <button class="btn btn-sm btn-secondary d-lg-none d-inline-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">
                                     <i class="bi bi-list"></i>
                                 </button>

@@ -3,7 +3,8 @@
 function renderPublisherForm($publisherTypes, $echoBack = true, $valuesArray = null) {
     $lang = is_null($valuesArray) ? "Add" : "Edit";
     $langLower = strtolower($lang);
-    $actionVal = !$echoBack ? "../../controllers/catalog/$langLower-publisher-controller.php?echo=$echoBack&publisherId=$valuesArray[PublisherID]" : '';
+    $publisherString = is_null($valuesArray) ? '' : "&publisherId=$valuesArray[PublisherID]";
+    $actionVal = !$echoBack ? "../../controllers/catalog/$langLower-publisher-controller.php?echo=$echoBack" . $publisherString : '';
     $methodVal = !$echoBack ? 'POST' : '';
 
     $name = $valuesArray['Name'] ?? '';
@@ -22,7 +23,7 @@ function renderPublisherForm($publisherTypes, $echoBack = true, $valuesArray = n
 
         _END;
                     if(is_null($valuesArray)) {
-                        echo "<option selected disabled></option";
+                        echo "<option selected disabled></option>";
                     }
                     foreach($publisherTypes as $type) {
                         $selected = $type['id'] == $publisherTypeId ? 'selected' : '';
