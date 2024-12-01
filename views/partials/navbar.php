@@ -44,7 +44,7 @@ if($authenticated) {
 	if(array_intersect($roles, array("Admin", "Staff"))) {
 		echo <<<_END
 						<li class="nav-item">
-							<a class="nav-link" href="view-employees.php">Staff</a>
+							<a class="nav-link" href="application-settings.php">Application</a>
 						</li>
 		_END;
 	}

@@ -4,10 +4,21 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+<!-- Auth Code -->
 <?php
-require_once('../../config/dbauth.php');
+require_once '../../config/dbauth.php';
+require_once '../../helpers.php';
+
+// Redirect to login if user is logged in
+if(!isset($_SESSION['accountId'])) {
+    header('Location: login.php');
+	exit();
+}
 
 $conn = connect();
+
+$roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
+preventMembers($roles); // Redirect if "Member"
 
 $query = <<<_END
 	WITH VALS AS (
@@ -258,68 +269,10 @@ $conn->close();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="creator-form" class="row g-3">
-                    <div class="col-md-9">
-                        <label for="#name-in" class="col-form-label fw-bold">*Creator Name</label>
-                        <input id="name-in" class="form-control" type="text" name="name" aria-label="Name input" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="#gender-in" class="col-form-label fw-bold">*Gender</label>
-                        <select id="gender-in" class="form-select" name="gender" aria-label="Gender input" required>
-                            <option selected disabled></option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-                        </select>
-                    </div>
-
-                    <div class="col-12">
-                        <label for="#bio-in" class="col-form-label fw-bold">*Biography</label>
-                        <textarea class="form-control" name="bio" id="bio-in" rows="4" required></textarea>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="#date-born-in" class="col-form-label fw-bold">*Birth Date</label>
-                        <input class="form-control" type="date" name="dateBorn" id="date-born-in" aria-label="Date born input" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="#date-died-in" class="col-form-label fw-bold">Death Date</label>
-                        <input class="form-control" type="date" name="dateDied" id="date-died-in" aria-label="Date died input">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="#creator-type-in" class="col-form-label fw-bold">*Creator Type</label>
-                        <div class="input-group">
-                            <select id="creator-type-in" class="form-select" name="creatorType" aria-label="Creator type input" required>
-                            <?php
-                            echo <<<_END
-                                <option selected disabled></option>
-                            _END;
-                            foreach($selectItems['creatorTypes'] as $type) {
-                                echo <<<_END
-                                    <option value="$type[id]">$type[name]</option>
-                                _END;
-                            }
-                            ?>
-                            </select>
-                            <button class="btn btn-primary" type="button" id="button-addon2"
-                                data-bs-toggle="modal" 
-                                data-bs-target="#newItemModal"
-                                onclick="prepModal('creator type','LIB_CREATOR_TYPE','creator-type-in', 'true')"
-                            ><i class="bi bi-plus-lg"></i></button>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="#imgUpload" class="col-form-label fw-bold">*Creator Image</label>
-                        <input class="form-control" type="file" name="imgUpload" id="imgUpload" aria-label="Creator image upload" required>
-                    </div>
-                    
-                    <div class="col-6 mt-5">
-                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                    </div>
-                    <div class="col-6 mt-5">
-                        <button type="submit" class="btn btn-success w-100">Add Creator</button>
-                    </div>
-                </form>
+                <?php
+                require_once '../partials/creator-form.php';
+                renderCreatorForm($selectItems['creatorTypes']);
+                ?>
             </div>
         </div>
     </div>
@@ -335,41 +288,10 @@ $conn->close();
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="publisher-form" class="row g-3">
-                        <div class="col-12">
-                            <label for="#name-in" class="col-form-label fw-bold">*Publisher Name</label>
-                            <input id="name-in" class="form-control" type="text" name="name" aria-label="Publisher name input" required>
-                        </div>
-                        <div class="col-12">
-                            <label for="#publisher-type-in" class="col-form-label fw-bold">*Publisher Type</label>
-                            <div class="input-group">
-                                <select id="publisher-type-in" class="form-select" name="publisherType" aria-label="Publisher type input" required>
-                                <?php
-                                echo <<<_END
-                                    <option selected disabled></option>
-                                _END;
-                                foreach($selectItems['publisherTypes'] as $type) {
-                                    echo <<<_END
-                                        <option value="$type[id]">$type[name]</option>
-                                    _END;
-                                }
-                                ?>
-                                </select>
-                                <button class="btn btn-primary" type="button" id="button-addon2"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#newItemModal"
-                                    onclick="prepModal('publisher type','LIB_PUBLISHER_TYPE','publisher-type-in', 'true')"
-                                ><i class="bi bi-plus-lg"></i></button>
-                            </div>
-                        </div>
-                        
-                        <div class="col-6 mt-5">
-                            <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        </div>
-                        <div class="col-6 mt-5">
-                            <button type="submit" class="btn btn-success w-100">Add Publisher</button>
-                        </div>
-                    </form>
+                    <?php
+                    require_once '../partials/publisher-form.php';
+                    renderPublisherForm($selectItems['publisherTypes']);
+                    ?>
                 </div>
             </div>
         </div>
@@ -386,23 +308,10 @@ $conn->close();
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="new-item-form" class="row g-3">
-                        <div class="col-12">
-                            <label for="#name-in" class="col-form-label fw-bold">*Field Name</label>
-                            <input id="name-in" class="form-control" type="text" name="name" aria-label="Item name input" required>
-                        </div>
-
-                        <input id="table-in" class="visually-hidden" type="text" name="table" value="">
-                        <input id="inputField-in" class="visually-hidden" type="text" name="inputField" value="">
-                        <input id="reopen-in" class="visually-hidden" type="text" name="reopen" value="">
-                        
-                        <div class="col-6 mt-5">
-                            <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        </div>
-                        <div class="col-6 mt-5">
-                            <button type="submit" class="btn btn-success w-100">Add Field</button>
-                        </div>
-                    </form>
+                    <?php
+                    require_once '../partials/item-field-form.php';
+                    renderFieldForm();
+                    ?>
                 </div>
             </div>
         </div>

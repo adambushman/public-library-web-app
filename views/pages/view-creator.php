@@ -12,6 +12,7 @@
                 require_once '../../helpers.php';
 
                 $conn = connect();
+                $roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
                 $creatorId = prepSanitaryData($conn, $_GET['creatorId']);
 
                 $queryFramework = <<<_END
@@ -58,6 +59,27 @@
                             <h1 class="display-5 mb-2">$row[Name]</h1>
                             <h4 class="mb-1">$row[CreatorType]</h4>
                             <p class="mb-0">$lifeDates[0] - $lifeDates[1]</p>
+                        </div>
+                        <div class="row">
+                _END;
+
+                if(count(array_intersect($roles, array("Admin", "Staff")))) {
+                    echo <<<_END
+                            <div class="col-6">
+                                <a class="btn btn-sm btn-warning d-inline-flex justify-content-center align-items-center w-100" href="edit-creator.php?creatorId=$creatorId">
+                                    <i class="bi bi-pencil pe-2"></i>    
+                                    Update
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a class="btn btn-sm btn-danger d-inline-flex justify-content-center align-items-center w-100" href="../../controllers/catalog/delete-creator-controller.php?creatorId=$creatorId">
+                                    <i class="bi bi-trash pe-2"></i>
+                                    Remove
+                                </a>
+                            </div>
+                    _END;
+                }
+                echo <<<_END
                         </div>
                     </div>
                 _END;

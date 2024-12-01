@@ -4,11 +4,21 @@
 <!-- Navbar -->
 <?php include_once '../partials/navbar.php'; ?>
 
+<!-- Auth Code -->
 <?php
-require_once('../../config/dbauth.php');
-require_once('../../helpers.php');
+require_once '../../config/dbauth.php';
+require_once '../../helpers.php';
+
+// Redirect to login if user is logged in
+if(!isset($_SESSION['accountId'])) {
+    header('Location: login.php');
+	exit();
+}
 
 $conn = connect();
+
+$roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accountId']) : [];
+preventMembers($roles); // Redirect if "Member"
 
 $valuesQuery = <<<_END
 	WITH VALS AS (
@@ -104,19 +114,33 @@ function renderTable($catalogItems, $detailsLink, $editLink, $deleteLink) {
                         <td>$item[id]</td>
                         <td>$item[name]</td>
                         <td class="text-end">
+                _END;
+                if(!is_null($detailsLink)) {
+                    echo <<<_END
                         <a href="$details" class="btn text-secondary"
                         data-bs-toggle="tooltip"
                         data-bs-title="Details"
                         ><i class="bi bi-chat-left-text"></i></a>
+                    _END;
+                }
+                if(!is_null($editLink)) {
+                    echo <<<_END
                         <a href="$edit" class="btn text-secondary"
                         data-bs-toggle="tooltip"
                         data-bs-title="Edit"
                         ><i class="bi bi-pencil"></i></a>
+                    _END;
+                }
+                if(!is_null($deleteLink)) {
+                    echo <<<_END
                         <form class="d-inline" action="$delete" method="POST">
-                        <button type="submit" class="btn"
+                        <button type="submit" class="btn text-secondary"
                         data-bs-toggle="tooltip"
                         data-bs-title="Delete"
                         ><i class="bi bi-trash3"></i></button>
+                    _END;
+                }
+                echo <<<_END
                         </form>
                         </td>
                     </tr>
@@ -181,13 +205,13 @@ function renderTable($catalogItems, $detailsLink, $editLink, $deleteLink) {
                         </div>
                         <hr>
                         <div class="mb-3">
-                            <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Member</a>
+                            <a href="add-account.php?accountTypeId=3" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Member</a>
                         </div>
                         <?php 
                         renderTable(
                             $itemsCatalog['memberAccounts'], // Items to fill
-                            '', // Details link/path
-                            '', // Edit link/path
+                            null, // Details link/path
+                            'edit-account.php?accountId=', // Edit link/path
                             '../../controllers/account/delete-account-controller.php?accountId=' // Delete link/path
                         ) 
                         ?>
@@ -203,13 +227,13 @@ function renderTable($catalogItems, $detailsLink, $editLink, $deleteLink) {
                         </div>
                         <hr>    
                         <div class="mb-3">
-                            <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Staff</a>
+                            <a href="add-account.php?accountTypeId=2" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Staff</a>
                         </div>                    
                         <?php 
                         renderTable(
                             $itemsCatalog['staffAccounts'], // Items to fill
-                            '', // Details link/path
-                            '', // Edit link/path
+                            null, // Details link/path
+                            'edit-account.php?accountId=', // Edit link/path
                             '../../controllers/account/delete-account-controller.php?accountId=' // Delete link/path
                         ) 
                         ?>
@@ -225,14 +249,14 @@ function renderTable($catalogItems, $detailsLink, $editLink, $deleteLink) {
                         </div>
                         <hr>
                         <div class="mb-3">
-                            <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Account Type</a>
+                            <a href="add-item-field.php?table=LIB_ACCOUNT_TYPE" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Account Type</a>
                         </div>
                         <?php 
                         renderTable(
                             $itemsCatalog['accountTypes'], // Items to fill
-                            '', // Details link/path
-                            '', // Edit link/path
-                            '' // Delete link/path
+                            null, // Details link/path
+                            'edit-item-field.php?table=LIB_ACCOUNT_TYPE&id=', // Edit link/path
+                            '../../controllers/catalog/delete-item-field-controller.php?table=LIB_ACCOUNT_TYPE&id=' // Delete link/path
                         ) 
                         ?>
                     </div>
@@ -282,40 +306,40 @@ function renderTable($catalogItems, $detailsLink, $editLink, $deleteLink) {
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active mb-4" id="item-type-tab-pane" role="tabpanel" aria-labelledby="item-type-tab" tabindex="0">                                
                                 <div class="my-3">
-                                    <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Item Type</a>
+                                    <a href="add-item-field.php?table=LIB_ITEM_TYPE" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Item Type</a>
                                 </div>
                                 <?php 
                                 renderTable(
                                     $itemsCatalog['itemTypes'], // Items to fill
-                                    '', // Details link/path
-                                    '', // Edit link/path
-                                    '' // Delete link/path
+                                    null, // Details link/path
+                                    'edit-item-field.php?table=LIB_ITEM_TYPE&id=', // Edit link/path
+                                    '../../controllers/catalog/delete-item-field-controller.php?table=LIB_ITEM_TYPE&id=' // Delete link/path
                                 ) 
                                 ?>
                             </div>
                             <div class="tab-pane fade mb-4" id="media-type-tab-pane" role="tabpanel" aria-labelledby="media-type-tab" tabindex="0">
                                 <div class="my-3">
-                                    <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Media Type</a>
+                                    <a href="add-item-field.php?table=LIB_MEDIA_TYPE" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Media Type</a>
                                 </div>
                                 <?php 
                                 renderTable(
                                     $itemsCatalog['mediaTypes'], // Items to fill
-                                    '', // Details link/path
-                                    '', // Edit link/path
-                                    '' // Delete link/path
+                                    null, // Details link/path
+                                    'edit-item-field.php?table=LIB_MEDIA_TYPE&id=', // Edit link/path
+                                    '../../controllers/catalog/delete-item-field-controller.php?table=LIB_MEDIA_TYPE&id=' // Delete link/path
                                 ) 
                                 ?>
                             </div>
                             <div class="tab-pane fade mb-4" id="genre-tab-pane" role="tabpanel" aria-labelledby="genre-tab" tabindex="0">
                                 <div class="my-3">
-                                    <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Genre</a>
+                                    <a href="add-item-field.php?table=LIB_GENRE" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Genre</a>
                                 </div>
                                 <?php 
                                 renderTable(
                                     $itemsCatalog['genres'], // Items to fill
-                                    '', // Details link/path
-                                    '', // Edit link/path
-                                    '' // Delete link/path
+                                    null, // Details link/path
+                                    'edit-item-field.php?table=LIB_GENRE&id=', // Edit link/path
+                                    '../../controllers/catalog/delete-item-field-controller.php?table=LIB_GENRE&id=' // Delete link/path
                                 ) 
                                 ?>
                             </div>
@@ -342,27 +366,27 @@ function renderTable($catalogItems, $detailsLink, $editLink, $deleteLink) {
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active mb-4" id="creator-tab-pane" role="tabpanel" aria-labelledby="creator-tab" tabindex="0">
                                 <div class="my-3">
-                                    <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Creator</a>
+                                    <a href="add-creator.php" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Creator</a>
                                 </div>
                                 <?php 
                                 renderTable(
                                     $itemsCatalog['creators'], // Items to fill
-                                    '', // Details link/path
-                                    '', // Edit link/path
-                                    '' // Delete link/path
+                                    'view-creator.php?creatorId=', // Details link/path
+                                    'edit-creator.php?creatorId=', // Edit link/path
+                                    '../../controllers/catalog/delete-creator-controller.php?creatorId=' // Delete link/path
                                 ) 
                                 ?>
                             </div>
                             <div class="tab-pane fade mb-4" id="creator-type-tab-pane" role="tabpanel" aria-labelledby="creator-type-tab" tabindex="0">
                                 <div class="my-3">
-                                    <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Creator Type</a>
+                                    <a href="add-item-field.php?table=LIB_CREATOR_TYPE" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Creator Type</a>
                                 </div>
                                 <?php 
                                 renderTable(
                                     $itemsCatalog['creatorTypes'], // Items to fill
-                                    '', // Details link/path
-                                    '', // Edit link/path
-                                    '' // Delete link/path
+                                    null, // Details link/path
+                                    'edit-item-field.php?table=LIB_CREATOR_TYPE&id=', // Edit link/path
+                                    '../../controllers/catalog/delete-item-field-controller.php?table=LIB_CREATOR_TYPE&id=' // Delete link/path
                                 ) 
                                 ?>
                             </div>
@@ -389,27 +413,27 @@ function renderTable($catalogItems, $detailsLink, $editLink, $deleteLink) {
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active mb-4" id="publisher-tab-pane" role="tabpanel" aria-labelledby="publisher-tab" tabindex="0">
                                 <div class="my-3">
-                                    <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Publisher</a>
+                                    <a href="add-publisher.php" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Publisher</a>
                                 </div>
                                 <?php 
                                 renderTable(
                                     $itemsCatalog['publishers'], // Items to fill
-                                    '', // Details link/path
-                                    '', // Edit link/path
-                                    '' // Delete link/path
+                                    null, // Details link/path
+                                    'edit-publisher.php?publisherId=', // Edit link/path
+                                    '../../controllers/catalog/delete-publisher-controller.php?publisherId=' // Delete link/path
                                 ) 
                                 ?>
                             </div>
                             <div class="tab-pane fade mb-4" id="publisher-type-tab-pane" role="tabpanel" aria-labelledby="publisher-type-tab" tabindex="0">
                                 <div class="my-3">
-                                    <a href="#" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Publisher Type</a>
+                                    <a href="add-item-field.php?table=LIB_PUBLISHER_TYPE" class="btn btn-sm btn-info"><i class="bi bi-plus-lg pe-2"></i>Add Publisher Type</a>
                                 </div>
                                 <?php 
                                 renderTable(
                                     $itemsCatalog['publisherTypes'], // Items to fill
-                                    '', // Details link/path
-                                    '', // Edit link/path
-                                    '' // Delete link/path
+                                    null, // Details link/path
+                                    'edit-item-field.php?table=LIB_PUBLISHER_TYPE&id=', // Edit link/path
+                                    '../../controllers/catalog/delete-item-field-controller.php?table=LIB_PUBLISHER_TYPE&id=' // Delete link/path
                                 ) 
                                 ?>
                             </div>
