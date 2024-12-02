@@ -112,7 +112,7 @@ INSERT INTO LIB_PUBLISHER (Name, PublisherTypeID) VALUES
 
 
 INSERT INTO LIB_ITEM (Isbn, Title, Description, Year, IssueNumber, LibCopies, ImagePath, LibLocation, ItemTypeID, MediaTypeID, GenreID) VALUES
-('9783161484100','Adventures of Huckleberry Finn', 'A novel by Mark Twain that chronicles the adventures of a young boy and an escaped slave.', 1884, 1, 2, 'ImageDirectory/item-img-1.webp', 'FIC TWA 813.4', 1, 1, 21),
+('9783161484100','Adventures of Huckleberry Finn', 'A novel by Mark Twain that chronicles the adventures of a young boy and an escaped slave.', 1884, 1, 2, 'ImageDirectory/item-img-1.jpg', 'FIC TWA 813.4', 1, 1, 21),
 ('9780590353403','Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling\'s fantasy novel about a young wizard attending Hogwarts School of Witchcraft and Wizardry.', 1997, 1, 1, 'ImageDirectory/item-img-2.jpg', 'FIC ROW 823.914', 1, 1, 4),
 ('9780590471151','Harry Potter and the Chamber of Secrets', 'J.K. Rowling\'s second book in the Harry Potter series, where Harry faces new challenges at Hogwarts.', 1998, 2, 2, 'ImageDirectory/item-img-3.jpg', 'FIC ROW 823.914', 1, 1, 4),
 ('9780590471168','Harry Potter and the Prisoner of Azkaban', 'The third novel in the Harry Potter series, where Harry learns more about his family\'s dark secrets.', 1999, 3, 2, 'ImageDirectory/item-img-4.jpg', 'FIC LEE 813.54', 1, 1, 4),

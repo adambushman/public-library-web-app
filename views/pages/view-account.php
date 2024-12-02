@@ -21,54 +21,41 @@ $queryFramework = <<<_END
 SELECT 
     la.*,
     lat.Name AS `AccountType`,
-    CONCAT(
-        '{"CheckoutHistory": [', 
-        GROUP_CONCAT(
-            CONCAT(
-                '{"CheckoutID": ', lc.CheckoutID, 
-                ', "CheckoutDate": "', lc.CheckoutDate, '"',
-                ', "DueDate": "', lc.DueDate, '"',
-                ', "ReturnDate": "', IFNULL(lc.ReturnDate, 'null'), '"',
-                ', "Items": [',
-                    IFNULL(
-                        (
-                            SELECT 
-                                GROUP_CONCAT(
-                                    CONCAT(
-                                        '{"id": ', li.ItemID, 
-                                        ', "title": "', li.Title, '"',
-                                        ', "img": "', IFNULL(li.ImagePath, ''), '"}'
-                                    ) 
-                                    SEPARATOR ','
-                                )
-                            FROM LIB_CHECKOUT_ITEM lci
-                            INNER JOIN LIB_ITEM li ON li.ItemID = lci.ItemID
-                            WHERE lci.CheckoutID = lc.CheckoutID
-                        ),
-                        ''
-                    ),
-                '], "Fees": [',
-                    IFNULL(
-                        (
-                            SELECT 
-                                GROUP_CONCAT(
-                                    CONCAT(
-                                        '{"FeeType": "', lft.Name, '"',
-                                        ', "Amount": ', lf.Amount,
-                                        ', "DatePaid": "', IFNULL(lf.PaidDate, 'null'), '"}'
-                                    )
-                                    SEPARATOR ','
-                                )
-                            FROM LIB_FEES lf
-                            INNER JOIN LIB_FEE_TYPE lft ON lft.FeeTypeID = lf.FeeTypeID
-                            WHERE lf.CheckoutID = lc.CheckoutID
-                        ),
-                        ''
-                    ),
-                ']}'
+    JSON_OBJECT(
+        'CheckoutHistory', JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'CheckoutID', lc.CheckoutID,
+                'CheckoutDate', lc.CheckoutDate,
+                'DueDate', lc.DueDate,
+                'ReturnDate', lc.ReturnDate,
+                'Items', (
+                    SELECT 
+                        JSON_ARRAYAGG(
+                            JSON_OBJECT(
+                                'id', li.ItemID,
+                                'title', li.Title,
+                                'img', IFNULL(li.ImagePath, '')
+                            )
+                        )
+                    FROM LIB_CHECKOUT_ITEM lci
+                    INNER JOIN LIB_ITEM li ON li.ItemID = lci.ItemID
+                    WHERE lci.CheckoutID = lc.CheckoutID
+                ),
+                'Fees', (
+                    SELECT 
+                        JSON_ARRAYAGG(
+                            JSON_OBJECT(
+                                'FeeType', lft.Name,
+                                'Amount', lf.Amount,
+                                'DatePaid', lf.PaidDate
+                            )
+                        )
+                    FROM LIB_FEES lf
+                    INNER JOIN LIB_FEE_TYPE lft ON lft.FeeTypeID = lf.FeeTypeID
+                    WHERE lf.CheckoutID = lc.CheckoutID
+                )
             )
-        ),
-        ']}'
+        )
     ) AS `CheckoutHistory`
 FROM LIB_ACCOUNT la
 INNER JOIN LIB_ACCOUNT_TYPE lat ON lat.AccountTypeID = la.AccountTypeID
@@ -237,31 +224,32 @@ $data = array(
                                             </tr></thead><tbody>
                                         _END;
                                         
-                                        foreach($itemsArray as $item) {
-                                            $checkoutFormatted = formatDate($item['CheckoutDate']);
-                                            $dueFormatted = formatDate($item['DueDate']);
-                                            $returnDate = $item['ReturnDate'] == 'null' ? '' : formatDate($item['ReturnDate']);
-                                            echo <<<_END
-                                            <tr>
-                                                <td>$checkoutFormatted</td>
-                                                <td>$dueFormatted</td>
-                                                <td>$returnDate</td>
-                                                <td><div class='d-flex gap-2'>
-                                            _END;
-
-                                            foreach($item['Items'] as $i) {
+										foreach($itemsArray as $item) {
+                                            if(!is_null($item['CheckoutDate'])) {
+                                                $checkoutFormatted = formatDate($item['CheckoutDate']);
+                                                $dueFormatted = formatDate($item['DueDate']);
+                                                $returnDate = is_null($item['ReturnDate'])  ? '' : formatDate($item['ReturnDate']);
                                                 echo <<<_END
-                                                    <a href="view-item.php?itemId=$i[id]">
-                                                        <img src='../../$i[img]' style='width:2rem'
-                                                        data-bs-toggle='tooltip'
-                                                        data-bs-title='$i[title]'
-                                                        >
-                                                    </a>
+                                                <tr>
+                                                    <td>$checkoutFormatted</td>
+                                                    <td>$dueFormatted</td>
+                                                    <td>$returnDate</td>
+                                                    <td><div class='d-flex gap-2'>
                                                 _END;
-                                                //echo "<p class='small mb-0'>$i[title]</p>";
-                                            }
 
-                                            echo "</div></td></tr>";
+                                                foreach($item['Items'] as $i) {
+                                                    echo <<<_END
+                                                        <a href="view-item.php?itemId=$i[id]">
+                                                            <img src='../../$i[img]' style='width:2rem'
+                                                            data-bs-toggle='tooltip'
+                                                            data-bs-title='$i[title]'
+                                                            >
+                                                        </a>
+                                                    _END;
+                                                    //echo "<p class='small mb-0'>$i[title]</p>";
+                                                }
+                                                echo "</div></td></tr>";
+                                            }
                                         }
                                         echo "</tbody>";
                                     ?>
@@ -297,40 +285,50 @@ $data = array(
                                         _END;
                                         
                                         foreach($itemsArray as $item) {
-                                            $returnDate = $item['ReturnDate'] == 'null' ? '' : $item['ReturnDate'];
-                                            $checkoutFormatted = formatDate($item['CheckoutDate']);
-                                            echo <<<_END
-                                            <tr>
-                                                <td>$checkoutFormatted</td>
-                                                <td><div class='d-flex gap-2'>
-                                            _END;
-
-                                            foreach($item['Items'] as $i) {
-                                                echo <<<_END
-                                                    <a href="view-item.php?itemId=$i[id]">
-                                                        <img src='../../$i[img]' style='width:2rem'
-                                                        data-bs-toggle='tooltip'
-                                                        data-bs-title='$i[title]'
-                                                        >
-                                                    </a>
-                                                _END;
-                                                //echo "<p class='small mb-0'>$i[title]</p>";
-                                            }
-
-                                            echo "</div></td><td><dl class='row'>";
-
-                                            foreach($item['Fees'] as $i) {
-                                                $formattedDate = $i['DatePaid'] == 'null' ? '' : 'Paid - ' . formatDate($i['DatePaid']);
-                                                echo <<<_END
-                                                    <dt class="col-5">$i[FeeType]</dt>
-                                                    <dd class="col-3">$$i[Amount]</dd>
-                                                    <dd class="col-4">$formattedDate</dd>
-                                                _END;
-                                                //echo "<p class='small mb-0'>$i[title]</p>";
-                                            }
-
-                                            echo "</dl></td></tr>";
-                                        }
+											if(!is_null($item['CheckoutDate'])) {
+												$returnDate = is_null($item['ReturnDate']) ? '' : $item['ReturnDate'];
+												$checkoutFormatted = formatDate($item['CheckoutDate']);
+												echo <<<_END
+												<tr>
+													<td>$checkoutFormatted</td>
+													<td><div class='d-flex gap-2'>
+												_END;
+	
+												foreach($item['Items'] as $i) {
+													echo <<<_END
+														<a href="view-item.php?itemId=$i[id]">
+															<img src='../../$i[img]' style='width:2rem'
+															data-bs-toggle='tooltip'
+															data-bs-title='$i[title]'
+															>
+														</a>
+													_END;
+													//echo "<p class='small mb-0'>$i[title]</p>";
+												}
+	
+												echo "</div></td>";
+                                            
+												if(!is_null($item['Fees'])) {
+													echo "<td><dl class='row'>";
+	
+													foreach($item['Fees'] as $i) {
+														$formattedDate = is_null($i['DatePaid']) ? '' : 'Paid - ' . formatDate($i['DatePaid']);
+														echo <<<_END
+															<dt class="col-5">$i[FeeType]</dt>
+															<dd class="col-3">$$i[Amount]</dd>
+															<dd class="col-4">$formattedDate</dd>
+														_END;
+														//echo "<p class='small mb-0'>$i[title]</p>";
+													}
+	
+													echo "</dl></td>";
+												} else {
+													echo "<td></td>";
+												}
+												
+												echo "</tr>";
+											} 
+										}
                                         echo "</tbody>";
                                     ?>
                                 </table>

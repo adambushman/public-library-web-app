@@ -21,56 +21,82 @@ $roles = isset($_SESSION['accountId']) ? getAccountRoles($conn, $_SESSION['accou
 preventMembers($roles); // Redirect if "Member"
 
 $valuesQuery = <<<_END
-	WITH VALS AS (
-    SELECT ItemTypeID AS ID, Name, 'ItemType' AS `Field` 
-    FROM LIB_ITEM_TYPE 
-    UNION ALL 
-    SELECT *, 'MediaType' AS `Field` 
-    FROM LIB_MEDIA_TYPE 
-    UNION ALL 
-    SELECT *, 'Genre' AS `Field` 
-    FROM LIB_GENRE 
-    UNION ALL 
-    SELECT lct.CreatorTypeID, lct.Name, 'CreatorType' AS `Field` 
-    FROM LIB_CREATOR_TYPE lct
-    UNION ALL 
-    SELECT lpt.PublisherTypeID, lpt.Name, 'PublisherType' AS `Field` 
-    FROM LIB_PUBLISHER_TYPE lpt 
-    UNION ALL 
-    SELECT lp.PublisherID, lp.Name, 'Publisher' AS `Field` 
-    FROM LIB_PUBLISHER lp
-    UNION ALL 
-    SELECT lc.CreatorID, lc.Name, 'Creator' AS `Field` 
-    FROM LIB_CREATOR lc
-    UNION ALL 
-    SELECT li.ItemID, li.Title AS `Name`, 'Item' AS `Field` 
-    FROM LIB_ITEM li
-    UNION ALL 
-    SELECT lat.AccountTypeID, lat.Name AS `Name`, 'AccountType' AS `Field` 
-    FROM LIB_ACCOUNT_TYPE lat
-    UNION ALL 
-    SELECT la.AccountID, CONCAT(la.FirstName, ' ', la.LastName) AS `Name`, 'StaffAccounts' AS `Field` 
-    FROM LIB_ACCOUNT la
-	WHERE la.AccountTypeID IN (1,2)
-    UNION ALL 
-    SELECT la.AccountID, CONCAT(la.FirstName, ' ', la.LastName) AS `Name`, 'MemberAccounts' AS `Field` 
-    FROM LIB_ACCOUNT la
-	WHERE la.AccountTypeID = 3
-    )
+WITH VALS AS (
     SELECT 
-    `Field`
-    ,CONCAT('[', 
-    GROUP_CONCAT(
-    DISTINCT CONCAT(
-        '{"id":', ID, 
-        ',"name":"', Name, '"}'
-    )
-    SEPARATOR ','
-    ), 
-    ']') AS `Records`
-    FROM VALS
-    GROUP BY `Field`
-    ORDER BY `Field`
+        ItemTypeID AS ID, 
+        Name, 
+        'ItemType' AS `Field` 
+    FROM LIB_ITEM_TYPE 
+    UNION ALL
+    SELECT 
+        MediaTypeID AS ID, 
+        Name, 
+        'MediaType' AS `Field` 
+    FROM LIB_MEDIA_TYPE 
+    UNION ALL
+    SELECT 
+        GenreID AS ID, 
+        Name, 
+        'Genre' AS `Field` 
+    FROM LIB_GENRE 
+    UNION ALL
+    SELECT 
+        CreatorTypeID AS ID, 
+        Name, 
+        'CreatorType' AS `Field` 
+    FROM LIB_CREATOR_TYPE 
+    UNION ALL
+    SELECT 
+        PublisherTypeID AS ID, 
+        Name, 
+        'PublisherType' AS `Field` 
+    FROM LIB_PUBLISHER_TYPE 
+    UNION ALL
+    SELECT 
+        PublisherID AS ID, 
+        Name, 
+        'Publisher' AS `Field` 
+    FROM LIB_PUBLISHER 
+    UNION ALL
+    SELECT 
+        CreatorID AS ID, 
+        Name, 
+        'Creator' AS `Field` 
+    FROM LIB_CREATOR 
+    UNION ALL
+    SELECT 
+        ItemID AS ID, 
+        Title AS `Name`, 
+        'Item' AS `Field` 
+    FROM LIB_ITEM 
+    UNION ALL
+    SELECT 
+        AccountTypeID AS ID, 
+        Name AS `Name`, 
+        'AccountType' AS `Field` 
+    FROM LIB_ACCOUNT_TYPE 
+    UNION ALL
+    SELECT 
+        AccountID AS ID, 
+        CONCAT(FirstName, ' ', LastName) AS `Name`, 
+        CASE 
+            WHEN AccountTypeID IN (1, 2) THEN 'StaffAccounts' 
+            WHEN AccountTypeID = 3 THEN 'MemberAccounts' 
+        END AS `Field` 
+    FROM LIB_ACCOUNT 
+    WHERE AccountTypeID IN (1, 2, 3)
+)
+SELECT 
+    `Field`,
+    JSON_ARRAYAGG(
+        JSON_OBJECT(
+            'id', ID, 
+            'name', Name
+        )
+    ) AS `Records`
+FROM VALS
+GROUP BY `Field`
+ORDER BY `Field`
 _END;
 
 $result = $conn->query($valuesQuery);
@@ -89,11 +115,13 @@ $itemsCatalog = array(
 );
 
 $index = 0;
+
 foreach($itemsCatalog as &$item) {
     $result->data_seek($index);
-    $item = json_decode(stripslashes($result->fetch_array(MYSQLI_ASSOC)['Records']), true);
+    $item = json_decode(($result->fetch_array(MYSQLI_ASSOC)['Records']), true);
     $index++;
 }
+
 
 function renderTable($catalogItems, $detailsLink, $editLink, $deleteLink) {
     echo <<<_END
